@@ -1,0 +1,2937 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d2f6b">
+<title>🛒 Boutique — US Bouloire Football</title>
+<meta name="description" content="La boutique en ligne du club US Bouloire Football : sweats, t-shirts, maillots et goodies aux couleurs du club.">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.png">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+
+<!-- Fonts (identique index.html pour cohérence visuelle parfaite) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://script.google.com" crossorigin>
+<link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="./usb-common.css">
+
+<style>
+:root {
+  /* ─── Aliases pour la nav d'index.html (cohérence visuelle parfaite) ───
+     index.html utilise --vert / --vert-mid / --vert-vif / --blanc, qu'on
+     redéfinit ici pour réutiliser exactement son CSS nav. --vert-nav-sub
+     remplace ce qu'index.html appelle --vert-clair dans son seul usage
+     nav (couleur du sous-titre logo), évitant ainsi tout conflit avec
+     l'usage --vert-clair que la boutique a déjà pour autre chose. */
+  --vert: #0d2f6b;
+  --vert-mid: #1a4fa3;
+  --vert-vif: #2f80ed;
+  --vert-nav-sub: #bcd3f5;
+  --blanc: #f5f5f0;
+
+  /* ─── Variables boutique (inchangées) ──────────────────────────────── */
+  --vert-club: #0d2f6b;
+  --vert-clair: #2d6b47;
+  --vert-bg: #e3edfb;
+  --vert-fonce: #081f4a;
+  --orange: #d62828;
+  --orange-clair: #ff8a3d;
+  --gris-bg: #f4f4ec;
+  --gris-bord: #d3d1c7;
+  --gris-bord-clair: #ebeae3;
+  --gris: #888780;
+  --gris-fonce: #444441;
+  --noir: #1a1a1a;
+  --ambre-bg: #faeeda;
+  --ambre: #ba7517;
+  --rouge-bg: #fcebeb;
+  --rouge: #a32d2d;
+
+  --radius-card: 14px;
+  --radius-btn: 10px;
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.04), 0 6px 18px rgba(0,0,0,0.06);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.08), 0 12px 28px rgba(0,0,0,0.10);
+}
+
+html, body {
+  font-family: 'DM Sans', -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--gris-bg);
+  color: var(--noir);
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100vh;
+  /* Reset des 8px de margin par défaut du body : sans ça, le bandeau
+     page-header n'était pas collé à la nav (espace blanc visible). */
+  margin: 0;
+}
+/* Body en colonne flex pour que le footer reste collé en bas même quand
+   le contenu est court (via .footer { margin-top: auto; }). Cohérent
+   avec le pattern utilisé sur index.html (.page > .footer).
+   .page-shop-wrap reçoit flex: 1 0 auto plus bas dans le CSS layout. */
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+a { color: var(--vert-club); }
+
+/* ════════════════════════════════════════════════════════════════════
+   NAV (extraite et adaptée d'index.html — voir commentaire en haut)
+   Code aligné à l'identique pour garantir la cohérence visuelle entre
+   l'app club (index.html) et la boutique. Seuls les liens/onclick
+   diffèrent : la boutique ne dispose pas de SPA pages, donc les liens
+   pointent vers index.html#xxx via href= au lieu d'onclick showPage().
+   ════════════════════════════════════════════════════════════════════ */
+@keyframes ball-bounce { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-8px) rotate(180deg); } }
+@keyframes ball-spin { from { transform: rotate(0deg); } to { transform: rotate(1080deg); } }
+.nav-logo-ball.spinning { animation: ball-spin .65s cubic-bezier(.2,.7,.3,1) 1; }
+.nav-logo-ball { cursor: pointer; }
+
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: calc(60px + env(safe-area-inset-top, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-left: 32px; padding-right: 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--vert);
+  border-bottom: 1px solid rgba(255,255,255,0.08); transition: box-shadow 0.3s;
+}
+.nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+.nav-logo { display: flex; align-items: center; gap: 10px; cursor: pointer; text-decoration: none; }
+.nav-logo-ball { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.nav-logo-ball img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.nav-logo-text { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 1.5px; color: #fff; line-height: 1; }
+.nav-logo-sub { font-size: 9px; color: var(--vert-nav-sub); letter-spacing: 2px; text-transform: uppercase; line-height: 1; }
+.nav-welcome, .nav-card-icon, .nav-card-sub, .nav-card-arrow { display: none; }
+.nav-list-wrap { display: contents; }
+.nav-links { display: flex; gap: 2px; list-style: none; margin: 0; padding: 0; }
+.nav-links a { display: block; padding: 8px 14px; border-radius: 6px; color: rgba(255,255,255,0.75); text-decoration: none; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+.nav-links a:hover, .nav-links a.active { color: #fff; background: rgba(255,255,255,0.12); }
+.nav-links a.active::after { content: ''; display: block; width: 16px; height: 2px; background: var(--vert-vif); margin: 3px auto 0; border-radius: 2px; }
+.nav-burger-footer { display: none; }
+.nav-fb { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.1); border-radius: 6px; padding: 7px 12px; color: rgba(255,255,255,0.8); text-decoration: none; font-size: 13px; font-weight: 500; transition: all 0.15s; }
+.nav-fb:hover { background: rgba(255,255,255,0.18); }
+.nav-fb svg { width: 14px; height: 14px; fill: #fff; }
+
+/* Burger button (mobile) */
+.nav-burger { display: none; flex-direction: column; gap: 4px; background: none; border: none; cursor: pointer; padding: 8px; margin-left: 4px; }
+.nav-burger span { display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px; transition: transform 0.25s, opacity 0.2s; }
+.nav-burger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.nav-burger.open span:nth-child(2) { opacity: 0; }
+.nav-burger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* Overlay derrière le menu mobile */
+.nav-mobile-overlay {
+  display: none; position: fixed;
+  inset: calc(60px + env(safe-area-inset-top, 0px)) 0 0 0;
+  background: rgba(13,20,36,0.5);
+  backdrop-filter: blur(4px); z-index: 95; opacity: 0; transition: opacity 0.2s;
+}
+.nav-mobile-overlay.show { display: block; opacity: 1; }
+
+/* Bouton login/déconnexion dans #authBar (panel droit nav, à côté du burger) */
+.nav-auth-btn {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  font-family: inherit;
+}
+.nav-auth-btn:hover { background: rgba(255,255,255,0.20); }
+.nav-auth-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+@media (max-width: 760px) {
+  .nav { padding-left: 16px; padding-right: 16px; }
+  .nav-fb { display: none; }
+  .nav-burger { display: flex; }
+  .nav-links {
+    position: fixed; top: calc(60px + env(safe-area-inset-top, 0px)); right: 0; bottom: 0; width: 300px; max-width: 88vw;
+    background: var(--vert); flex-direction: column; gap: 0; padding: 0;
+    transform: translateX(100%); transition: transform 0.25s ease; z-index: 96;
+    box-shadow: -4px 0 24px rgba(0,0,0,0.3); overflow-y: auto;
+  }
+  .nav-links.open { transform: translateX(0); }
+  .nav-links li { width: 100%; }
+  .nav-links a.nav-card { padding: 14px 12px; border-radius: 10px; font-size: 15px; text-align: left; }
+  .nav-links a.active { background: rgba(255,255,255,.10); }
+  .nav-links a.active::after { display: none; }
+  /* Réactivation des éléments décoratifs en mobile */
+  .nav-welcome { display: block !important; }
+  .nav-card-icon { display: flex !important; }
+  .nav-card-sub { display: block !important; }
+  .nav-card-arrow { display: inline !important; }
+  .nav-list-wrap { display: flex !important; flex-direction: column; gap: 4px; padding: 10px 12px; }
+  /* Header de bienvenue en haut du drawer */
+  .nav-welcome {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .nav-welcome-greeting {
+    font-size: 11px; color: rgba(255,255,255,.55);
+    letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px;
+  }
+  .nav-welcome-name {
+    font-family: 'Bebas Neue', sans-serif; font-size: 22px;
+    color: #fff; letter-spacing: 1.5px; line-height: 1;
+  }
+  .nav-list-wrap { padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+  .nav-links a.nav-card {
+    display: flex; align-items: center; gap: 12px; padding: 14px 12px;
+    border-radius: 10px; cursor: pointer; transition: background .15s;
+    border-left: 3px solid transparent;
+    position: relative;
+  }
+  .nav-links a.nav-card:hover { background: rgba(255,255,255,.06); }
+  .nav-links a.nav-card.active {
+    background: rgba(255,255,255,.10);
+    border-left-color: var(--vert-vif);
+  }
+  .nav-card-icon {
+    width: 36px; height: 36px; background: rgba(255,255,255,.06);
+    border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0; transition: background .15s;
+  }
+  .nav-links a.nav-card.active .nav-card-icon { background: rgba(47,128,237,.18); }
+  .nav-card-text { flex: 1; min-width: 0; }
+  .nav-card-title {
+    font-size: 14px; font-weight: 600; color: rgba(255,255,255,.92); line-height: 1.2;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .nav-links a.nav-card.active .nav-card-title { color: #fff; }
+  .nav-card-sub {
+    font-size: 11px; color: rgba(255,255,255,.5); margin-top: 2px;
+  }
+  .nav-card-arrow {
+    color: rgba(255,255,255,.3); font-size: 14px; flex-shrink: 0;
+    transition: color .15s, transform .15s;
+  }
+  .nav-links a.nav-card:hover .nav-card-arrow { color: rgba(255,255,255,.6); transform: translateX(2px); }
+  .nav-links a.nav-card.active .nav-card-arrow { color: rgba(255,255,255,.55); }
+  /* Footer dans le menu burger — sobre, en bas, centré */
+  .nav-burger-footer {
+    display: block;
+    margin-top: auto; padding: 18px 24px 22px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 11px; color: rgba(255,255,255,0.5); line-height: 1.6;
+    text-align: center;
+  }
+  .nav-burger-footer .nbf-ball {
+    width: 44px; height: 44px; margin: 0 auto 10px;
+    background: #fff; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .nav-burger-footer .nbf-ball img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .nav-burger-footer .nbf-ball.bouncing { animation: ball-bounce .6s ease-in-out 1; }
+  .nav-burger-footer .nbf-brand { font-family: 'Bebas Neue', sans-serif; letter-spacing: 1.5px; color: rgba(255,255,255,0.75); font-size: 13px; margin-bottom: 4px; }
+  .nav-burger-footer .nbf-slogan {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 4px;
+    letter-spacing: .2px;
+  }
+  .nav-links { justify-content: flex-start; align-items: center; }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   BADGE PANIER (intégré dans la nav, à côté du bouton login)
+   ════════════════════════════════════════════════════════════════════ */
+.nav-cart-link {
+  position: relative;
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px; font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  text-decoration: none;
+  margin-right: 8px;
+}
+.nav-cart-link:hover { background: rgba(255,255,255,0.20); }
+.nav-cart-link .cnt {
+  display: inline-block;
+  min-width: 18px; height: 18px;
+  padding: 0 5px;
+  background: var(--orange); color: white;
+  border-radius: 9px; font-size: 11px;
+  font-weight: 700; line-height: 18px;
+  margin-left: 2px;
+}
+.nav-cart-link .cnt.zero { display: none; }
+
+/* ════════════════════════════════════════════════════════════════════
+   PAGE HEADER (cohérent avec les autres pages : Tableau de bord, Mes
+   équipes, Contact...). Bandeau vert pleine largeur sous la nav.
+   ════════════════════════════════════════════════════════════════════ */
+.page-shop-wrap {
+  /* min-height: 100vh aligné sur le pattern .page d'index.html — garantit
+     que la zone de contenu remplit au moins la hauteur du viewport. Avec
+     le footer en plus juste dessous, on retrouve la même longueur de page
+     qu'index (et le même petit scroll par défaut).
+     Padding-top : passe sous la nav fixe (60px + safe-area).
+     flex: 1 0 auto : prend toute la hauteur restante du body flex column. */
+  min-height: 100vh;
+  padding-top: calc(60px + env(safe-area-inset-top, 0px));
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-header {
+  position: relative;
+  overflow: hidden;
+  background: var(--vert-club);
+  background: linear-gradient(180deg, var(--vert-club) 0%, #16402a 100%);
+  padding: 60px 32px 56px;
+  text-align: center;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.page-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, transparent, transparent 38px, rgba(255,255,255,0.025) 38px, rgba(255,255,255,0.025) 40px);
+  animation: stripe-move 8s linear infinite;
+  pointer-events: none;
+}
+.page-header::after {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 220px;
+  height: 220px;
+  border: 2px solid rgba(47,128,237, 0.12);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.page-header h2 {
+  position: relative;
+  z-index: 1;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px;
+  color: #fff;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+.page-header p {
+  position: relative;
+  z-index: 1;
+  font-size: 13px;
+  color: var(--vert-clair, #bcd3f5);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+@keyframes stripe-move { from { background-position: 0 0; } to { background-position: 40px 0; } }
+@media (max-width: 900px) {
+  .page-header { padding: 40px 20px 36px; min-height: 0; }
+  .page-header h2 { font-size: 32px; }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   LAYOUT
+   ════════════════════════════════════════════════════════════════════ */
+.shop-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  /* Le padding-top de la nav est désormais porté par .page-shop-wrap
+     (qui englobe page-header + shop-wrap), pour que le page-header
+     se cale juste sous la nav comme sur les autres pages.
+     Max-width 1100px aligné sur celui d'index.html pour cohérence. */
+  padding: 24px 20px 120px;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 28px;
+  align-items: start;
+}
+.shop-main { min-width: 0; }
+.shop-aside { position: sticky; top: calc(60px + env(safe-area-inset-top, 0px) + 18px); }
+@media (max-width: 900px) {
+  .shop-wrap { grid-template-columns: 1fr; padding: 20px 14px 100px; }
+  .shop-aside { display: none; }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   FOOTER (aligné sur index.html)
+   Fond vert club + slogan + crédit. margin-top: auto le pousse en bas
+   de page grâce au flex column de body (cf. body { display:flex; }).
+   ════════════════════════════════════════════════════════════════════ */
+.footer {
+  margin-top: auto;
+  background: var(--vert-club);
+  padding: 12px 32px;
+  color: rgba(255,255,255,0.5);
+}
+.footer-inner {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 16px;
+  max-width: 1100px; margin: 0 auto;
+}
+.footer-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px; color: #fff; letter-spacing: 1.5px;
+}
+.footer-slogan {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic; font-size: 12px;
+  color: rgba(255,255,255,.7); letter-spacing: .3px;
+}
+/* ── État des données — même gabarit que la cloche, juste à côté ──────
+   Largeur fixe : avec un libellé, la pastille élargirait le bloc de droite
+   et décentrerait le menu à chaque changement d'état. Le point porte la
+   couleur, l'infobulle porte le détail. */
+.shop-etat {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,.12); border: none; border-radius: 20px;
+  width: 32px; height: 32px; padding: 0; cursor: pointer; flex-shrink: 0;
+  transition: background .15s, transform .2s ease;
+}
+.shop-etat:hover  { background: rgba(255,255,255,.2); }
+.shop-etat:active { transform: scale(.94); }
+.shop-etat-pt { width: 10px; height: 10px; border-radius: 50%; background: #ccc; }
+.shop-etat.ok     .shop-etat-pt { background: #7cb4ff; }
+.shop-etat.charge .shop-etat-pt { background: rgba(255,255,255,.75); animation: shopPulse 1s ease-in-out infinite; }
+.shop-etat.vieux  { background: rgba(255,193,7,.22); }
+.shop-etat.vieux  .shop-etat-pt { background: #ffc107; }
+@keyframes shopPulse { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
+
+.footer-credit { font-size: 11px; color: rgba(255,255,255,0.4); }
+.footer-credit a {
+  color: rgba(255,255,255,0.55); text-decoration: none;
+  border-bottom: 1px dotted rgba(255,255,255,0.25);
+}
+.footer-credit a:hover { color: #fff; border-bottom-color: rgba(255,255,255,0.6); }
+@media (max-width: 600px) {
+  .footer { display: block; padding: 10px 16px; }
+  .footer .footer-inner { gap: 0; justify-content: center; }
+  .footer .footer-logo { display: none; }
+  .footer-credit {
+    font-size: 11px; text-align: center; line-height: 1.4;
+    color: rgba(255,255,255,0.55);
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   BANNIÈRE INTRO (uniquement non-loggés)
+   ════════════════════════════════════════════════════════════════════ */
+.intro-banner {
+  background: linear-gradient(135deg, var(--vert-club), var(--vert-clair));
+  color: white;
+  padding: 18px 22px;
+  border-radius: var(--radius-card);
+  margin-bottom: 18px;
+  display: flex; align-items: center; gap: 16px;
+  box-shadow: var(--shadow-card);
+}
+.intro-banner .icon-side { font-size: 36px; line-height: 1; }
+.intro-banner .txt { flex: 1; min-width: 0; }
+.intro-banner h2 { margin: 0 0 4px; font-size: 16px; font-weight: 700; }
+.intro-banner p { margin: 0; font-size: 13px; color: rgba(255,255,255,0.85); }
+.intro-banner button {
+  background: white; color: var(--vert-club);
+  border: 0; padding: 10px 16px;
+  border-radius: var(--radius-btn);
+  font-weight: 700; font-size: 13px;
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .intro-banner { flex-direction: column; align-items: stretch; text-align: center; }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   FILTRES CATÉGORIE
+   ════════════════════════════════════════════════════════════════════ */
+.filters-bar {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.cat-chip {
+  background: white;
+  border: 1.5px solid var(--gris-bord);
+  color: var(--gris-fonce);
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 13px; font-weight: 600;
+  transition: all 0.15s ease;
+}
+.cat-chip:hover { border-color: var(--vert-club); color: var(--vert-club); }
+.cat-chip.active {
+  background: var(--vert-club);
+  color: white;
+  border-color: var(--vert-club);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   GRILLE PRODUITS
+   ════════════════════════════════════════════════════════════════════ */
+.grid-produits {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.card-produit {
+  background: white;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+  display: flex; flex-direction: column;
+  position: relative;
+}
+.card-produit:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+.card-produit .photo-wrap {
+  position: relative;
+  aspect-ratio: 1/1;
+  background: var(--gris-bord-clair);
+  overflow: hidden;
+}
+.card-produit .photo-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.card-produit .photo-wrap .ph-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 50px; color: var(--gris-bord);
+}
+.card-produit .badge-mode {
+  position: absolute; top: 10px; left: 10px;
+  background: rgba(13,47,107,0.92);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+.card-produit .badge-mode.precommande { background: rgba(214,40,40,0.92); }
+.card-produit .badge-rupture {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.55);
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.card-produit .infos {
+  padding: 12px 14px 14px;
+  display: flex; flex-direction: column;
+  flex: 1; gap: 6px;
+}
+.card-produit h3 {
+  margin: 0; font-size: 15px; font-weight: 700;
+  color: var(--noir);
+  line-height: 1.3;
+}
+.card-produit .cat {
+  font-size: 11px; color: var(--gris);
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.card-produit .prix {
+  font-size: 18px; font-weight: 800;
+  color: var(--vert-club);
+  margin-top: auto;
+}
+.progress-precommande {
+  margin-top: 6px;
+}
+.progress-precommande .bar {
+  height: 6px; background: var(--gris-bord-clair); border-radius: 3px;
+  overflow: hidden;
+}
+.progress-precommande .bar > div {
+  height: 100%; background: linear-gradient(90deg, var(--orange-clair), var(--orange));
+  transition: width 0.4s ease;
+}
+.progress-precommande.ok .bar > div {
+  background: linear-gradient(90deg, #2f80ed, var(--vert-club));
+}
+.progress-precommande .txt {
+  font-size: 11px; color: var(--gris-fonce);
+  margin-top: 4px; display: flex; justify-content: space-between;
+}
+.progress-precommande.ok .txt {
+  color: var(--vert-club); font-weight: 600;
+}
+
+/* Empty state */
+.empty-shop {
+  text-align: center;
+  background: white;
+  padding: 50px 24px;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+.empty-shop .em { font-size: 50px; margin-bottom: 12px; }
+.empty-shop h3 { margin: 0 0 6px; color: var(--vert-club); }
+.empty-shop p { color: var(--gris-fonce); margin: 0 0 16px; }
+
+/* Skeleton loading */
+.skel-card {
+  background: white;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+.skel { background: linear-gradient(90deg, #eee, #f5f5f5, #eee); background-size: 200% 100%; animation: skel 1.4s linear infinite; }
+@keyframes skel { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.skel-photo { aspect-ratio: 1/1; }
+.skel-line { height: 14px; margin: 10px 14px; border-radius: 4px; }
+.skel-line.short { width: 50%; }
+
+/* ════════════════════════════════════════════════════════════════════
+   PANIER STICKY (desktop)
+   ════════════════════════════════════════════════════════════════════ */
+.cart-side {
+  background: white;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  max-height: calc(100vh - 100px);
+  display: flex; flex-direction: column;
+}
+.cart-side .cart-hd {
+  padding: 14px 16px;
+  background: var(--vert-club);
+  color: white;
+  font-weight: 700;
+  font-size: 15px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.cart-side .cart-hd .cnt {
+  background: rgba(255,255,255,0.18);
+  padding: 2px 9px; border-radius: 10px;
+  font-size: 12px;
+}
+.cart-side .cart-body {
+  flex: 1; overflow-y: auto; padding: 10px 12px;
+}
+.cart-side .cart-foot {
+  padding: 14px 16px;
+  border-top: 1px solid var(--gris-bord-clair);
+}
+
+.cart-line {
+  display: flex; gap: 10px;
+  padding: 10px 4px;
+  border-bottom: 1px dashed var(--gris-bord-clair);
+}
+.cart-line:last-child { border-bottom: 0; }
+.cart-line .thumb {
+  width: 56px; height: 56px;
+  background: var(--gris-bord-clair);
+  border-radius: 8px;
+  flex-shrink: 0; overflow: hidden;
+}
+.cart-line .thumb img { width: 100%; height: 100%; object-fit: cover; }
+.cart-line .thumb.ph { display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--gris-bord); }
+.cart-line .det { flex: 1; min-width: 0; }
+.cart-line .det .name {
+  font-size: 13px; font-weight: 600;
+  margin: 0 0 2px;
+  overflow: hidden; text-overflow: ellipsis;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.cart-line .det .pu { font-size: 11px; color: var(--gris); }
+.cart-line .right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.cart-line .right .total { font-size: 13px; font-weight: 700; color: var(--vert-club); }
+
+.stepper {
+  display: inline-flex; align-items: center;
+  background: var(--gris-bg);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.stepper button {
+  background: transparent;
+  border: 0; width: 26px; height: 26px;
+  font-size: 16px; font-weight: 700;
+  color: var(--vert-club);
+}
+.stepper button:hover { background: var(--gris-bord-clair); }
+.stepper .qty { min-width: 24px; text-align: center; font-size: 13px; font-weight: 600; }
+
+.cart-foot .total-line {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 12px;
+}
+.cart-foot .total-line .lbl { font-size: 13px; color: var(--gris-fonce); }
+.cart-foot .total-line .val {
+  font-size: 22px; font-weight: 800;
+  color: var(--vert-club);
+}
+.cart-foot .btn-checkout {
+  width: 100%;
+  background: var(--vert-club); color: white;
+  padding: 12px;
+  border: 0; border-radius: var(--radius-btn);
+  font-size: 14px; font-weight: 700;
+  transition: background 0.15s ease;
+}
+.cart-foot .btn-checkout:hover { background: var(--vert-fonce); }
+.cart-foot .btn-checkout:disabled { background: var(--gris-bord); cursor: not-allowed; }
+
+.cart-empty {
+  text-align: center;
+  padding: 30px 16px;
+  color: var(--gris);
+}
+.cart-empty .em { font-size: 40px; margin-bottom: 8px; }
+.cart-empty .t { font-size: 13px; }
+
+/* ════════════════════════════════════════════════════════════════════
+   FAB MOBILE
+   ════════════════════════════════════════════════════════════════════ */
+.fab-cart {
+  display: none;
+  position: fixed; right: 18px; bottom: 18px;
+  z-index: 40;
+  background: var(--vert-club);
+  color: white;
+  border: 0;
+  border-radius: 999px;
+  padding: 14px 18px;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+  align-items: center; gap: 8px;
+}
+.fab-cart .em { font-size: 18px; }
+.fab-cart .cnt {
+  background: var(--orange); color: white;
+  min-width: 22px; height: 22px;
+  border-radius: 11px; padding: 0 6px;
+  font-size: 12px; line-height: 22px;
+  display: inline-block;
+}
+@media (max-width: 900px) {
+  .fab-cart { display: flex; }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   MODALE PRODUIT (carrousel)
+   ════════════════════════════════════════════════════════════════════ */
+.modal-bg {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: none;
+  align-items: center; justify-content: center;
+  z-index: 100;
+  padding: 16px;
+}
+.modal-bg.visible { display: flex; }
+.modal {
+  background: white;
+  border-radius: var(--radius-card);
+  max-width: 720px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  box-shadow: 0 18px 60px rgba(0,0,0,0.30);
+}
+.modal-head {
+  padding: 14px 18px;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid var(--gris-bord-clair);
+}
+.modal-head h2 { margin: 0; font-size: 17px; color: var(--vert-club); }
+.modal-bg .modal-close,
+button.modal-close {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  font-size: 18px !important; line-height: 1 !important;
+  color: var(--gris-fonce) !important;
+  width: 32px !important; height: 32px !important;
+  display: inline-flex !important; align-items: center; justify-content: center;
+  border-radius: 999px !important;
+  font-family: inherit !important;
+  padding: 0 !important;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.modal-bg .modal-close:hover,
+button.modal-close:hover {
+  background: var(--gris-bord-clair) !important;
+  color: var(--noir) !important;
+}
+.modal-bg .modal-close:focus-visible,
+button.modal-close:focus-visible {
+  outline: none;
+  border-color: var(--vert-club) !important;
+}
+.modal-body { padding: 18px; overflow-y: auto; }
+
+/* Carrousel */
+.carousel {
+  position: relative;
+  background: var(--gris-bord-clair);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  aspect-ratio: 4/3;
+  margin-bottom: 14px;
+}
+.carousel-slide {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.25s ease;
+}
+.carousel-slide.active { opacity: 1; }
+.carousel-slide img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.carousel-slide.placeholder { color: var(--gris-bord); font-size: 80px; }
+.carousel-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  background: rgba(255,255,255,0.85);
+  border: 0;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  font-size: 18px; font-weight: 700;
+  color: var(--vert-club);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.carousel-arrow.left { left: 10px; }
+.carousel-arrow.right { right: 10px; }
+.carousel-arrow:disabled { opacity: 0.3; cursor: default; }
+.carousel-thumbs {
+  display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap;
+}
+.carousel-thumbs button {
+  width: 50px; height: 50px;
+  border: 2px solid transparent;
+  border-radius: 6px; overflow: hidden;
+  background: var(--gris-bord-clair);
+  padding: 0; cursor: pointer;
+}
+.carousel-thumbs button.active { border-color: var(--vert-club); }
+.carousel-thumbs button img { width: 100%; height: 100%; object-fit: cover; }
+
+.modal-product-info h3 {
+  margin: 0 0 4px;
+  font-size: 20px;
+  color: var(--vert-club);
+}
+.modal-product-info .cat-line {
+  font-size: 12px; color: var(--gris);
+  text-transform: uppercase; letter-spacing: 0.6px;
+  margin-bottom: 10px;
+}
+.modal-product-info .descr {
+  color: var(--gris-fonce);
+  margin-bottom: 14px;
+  white-space: pre-wrap;
+}
+.modal-product-info .meta-grid {
+  background: var(--vert-bg);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  font-size: 13px;
+}
+.modal-product-info .meta-grid .line {
+  display: flex; justify-content: space-between;
+  padding: 3px 0;
+}
+.modal-product-info .meta-grid .line:not(:last-child) {
+  border-bottom: 1px dashed var(--vert-clair);
+  margin-bottom: 3px; padding-bottom: 6px;
+}
+.modal-product-info .meta-grid .line .l { color: var(--vert-fonce); font-weight: 500; }
+.modal-product-info .meta-grid .line .v { color: var(--vert-club); font-weight: 700; }
+
+.modal-foot {
+  padding: 14px 18px;
+  border-top: 1px solid var(--gris-bord-clair);
+  background: var(--gris-bg);
+  display: flex; gap: 12px; align-items: center; justify-content: space-between;
+}
+.modal-foot .prix-bx { font-size: 22px; font-weight: 800; color: var(--vert-club); }
+.modal-foot .add-btn {
+  background: var(--vert-club); color: white;
+  border: 0; padding: 12px 22px;
+  border-radius: var(--radius-btn);
+  font-weight: 700; font-size: 14px;
+  transition: background 0.15s ease;
+}
+.modal-foot .add-btn:hover { background: var(--vert-fonce); }
+.modal-foot .add-btn:disabled { background: var(--gris-bord); cursor: not-allowed; }
+
+/* Bouton secondaire (Annuler / Fermer) dans le pied de modale.
+   Sélecteur très spécifique pour battre les defaults du browser sur les
+   <button> (font-family système, padding user-agent). On utilise aussi
+   button.btn-ghost (élément + classe) pour gagner en spécificité.
+   font-family !important parce que certains navigateurs (Chrome notamment)
+   gardent la font système malgré font-family: inherit. */
+.modal-bg .modal-foot button.btn-ghost,
+.modal-bg .modal-foot .btn-ghost {
+  background: white !important;
+  color: var(--gris-fonce) !important;
+  border: 1.5px solid var(--gris-bord) !important;
+  padding: 11px 22px !important;
+  border-radius: var(--radius-btn) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  font-family: inherit !important;
+  line-height: 1.2 !important;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  box-shadow: none;
+}
+.modal-bg .modal-foot button.btn-ghost:hover,
+.modal-bg .modal-foot .btn-ghost:hover {
+  background: var(--gris-bg) !important;
+  border-color: var(--gris-fonce) !important;
+  color: var(--noir) !important;
+}
+.modal-bg .modal-foot button.btn-ghost:focus-visible,
+.modal-bg .modal-foot .btn-ghost:focus-visible {
+  outline: none;
+  border-color: var(--vert-club) !important;
+  box-shadow: 0 0 0 3px rgba(13,47,107, 0.18);
+}
+.modal-bg .modal-foot button.btn-ghost:active,
+.modal-bg .modal-foot .btn-ghost:active {
+  transform: scale(0.98);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   DRAWER PANIER MOBILE
+   ════════════════════════════════════════════════════════════════════ */
+.drawer-bg {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 90;
+  display: none;
+}
+.drawer-bg.visible { display: block; }
+.drawer-cart {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 91;
+  background: white;
+  border-radius: 18px 18px 0 0;
+  max-height: 88vh;
+  transform: translateY(100%);
+  transition: transform 0.28s ease;
+  display: flex; flex-direction: column;
+  box-shadow: 0 -8px 30px rgba(0,0,0,0.20);
+}
+.drawer-cart.visible { transform: translateY(0); }
+.drawer-cart .grip {
+  width: 40px; height: 4px;
+  background: var(--gris-bord);
+  border-radius: 2px;
+  margin: 10px auto 4px;
+}
+.drawer-cart .cart-hd { background: transparent; color: var(--vert-club); padding-top: 4px; }
+.drawer-cart .cart-hd .cnt { background: var(--vert-bg); color: var(--vert-club); }
+.drawer-cart .cart-body { flex: 1; overflow-y: auto; }
+
+/* ════════════════════════════════════════════════════════════════════
+   AUTH MODAL
+   ════════════════════════════════════════════════════════════════════ */
+.auth-form .step { display: none; }
+.auth-form .step.active { display: block; }
+.auth-form label {
+  display: block; font-size: 13px; font-weight: 600;
+  margin-bottom: 6px; color: var(--gris-fonce);
+}
+.auth-form input[type=email], .auth-form input[type=text] {
+  width: 100%;
+  border: 1.5px solid var(--gris-bord);
+  padding: 11px 13px;
+  border-radius: var(--radius-btn);
+  font-size: 15px;
+  transition: border-color 0.15s ease;
+}
+.auth-form input:focus { border-color: var(--vert-club); outline: 0; }
+.auth-form .otp-input {
+  letter-spacing: 8px;
+  text-align: center;
+  font-size: 22px; font-weight: 700;
+}
+.auth-form .helper { font-size: 12px; color: var(--gris); margin-top: 6px; }
+.auth-form .err {
+  background: var(--rouge-bg);
+  color: var(--rouge);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-top: 10px;
+}
+.auth-form .btn-row {
+  display: flex; gap: 10px; margin-top: 14px;
+}
+.auth-form .btn-prim {
+  flex: 1;
+  background: var(--vert-club); color: white;
+  border: 0; padding: 12px;
+  border-radius: var(--radius-btn);
+  font-weight: 700; font-size: 14px;
+}
+.auth-form .btn-prim:disabled { background: var(--gris-bord); }
+.auth-form .btn-ghost {
+  background: transparent; color: var(--gris-fonce);
+  border: 1.5px solid var(--gris-bord);
+  padding: 12px 16px; border-radius: var(--radius-btn);
+  font-weight: 600; font-size: 13px;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   CHECKOUT
+   ════════════════════════════════════════════════════════════════════ */
+.checkout .profile-block {
+  background: var(--vert-bg);
+  border-radius: var(--radius-btn);
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  border-left: 4px solid var(--vert-club);
+}
+.checkout .profile-block .profile-label {
+  font-size: 11px; color: var(--vert-fonce);
+  text-transform: uppercase; letter-spacing: 0.6px;
+  margin-bottom: 4px; font-weight: 700;
+}
+.checkout .profile-block .profile-name {
+  font-size: 17px; font-weight: 700; color: var(--vert-club);
+  line-height: 1.2;
+}
+.checkout .profile-block .profile-email {
+  font-size: 12px; color: var(--gris); margin-top: 3px;
+}
+
+/* ─── Sélecteur de tailles (modale produit) ─── */
+.size-selector {
+  margin-top: 14px;
+}
+.size-selector-label {
+  font-size: 13px; font-weight: 700;
+  color: var(--gris-fonce);
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+.size-selector-label .req {
+  font-size: 10px; font-weight: 600;
+  background: var(--ambre-bg, #faeeda);
+  color: var(--ambre, #ba7517);
+  padding: 2px 7px; border-radius: 999px;
+  text-transform: uppercase; letter-spacing: 0.4px;
+}
+.size-pills {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.size-pill {
+  background: white;
+  border: 1.5px solid var(--gris-bord);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 14px; font-weight: 600;
+  color: var(--gris-fonce);
+  cursor: pointer;
+  transition: all 0.12s ease;
+  min-width: 44px;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
+}
+.size-pill:hover {
+  border-color: var(--vert-club);
+  color: var(--vert-club);
+}
+.size-pill.active {
+  background: var(--vert-club);
+  border-color: var(--vert-club);
+  color: white;
+}
+
+/* Affichage de la taille dans le panier (à côté du nom) */
+.cart-line .det .size-badge,
+.recap .item-l .size-badge {
+  display: inline-block;
+  background: var(--vert-bg, #e3edfb);
+  color: var(--vert-club);
+  padding: 1px 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 6px;
+  vertical-align: middle;
+  font-variant-numeric: tabular-nums;
+}
+
+.checkout .pay-mode {
+  display: grid; gap: 10px;
+  margin: 14px 0 18px;
+}
+.checkout .pay-opt {
+  border: 1.5px solid var(--gris-bord);
+  padding: 14px 16px;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  display: flex; align-items: center; gap: 14px;
+  transition: all 0.15s ease;
+}
+.checkout .pay-opt:hover { border-color: var(--vert-club); }
+.checkout .pay-opt.selected { border-color: var(--vert-club); background: var(--vert-bg); }
+.checkout .pay-opt .ico { font-size: 26px; }
+.checkout .pay-opt .t { font-weight: 700; font-size: 14px; }
+.checkout .pay-opt .s { font-size: 12px; color: var(--gris-fonce); margin-top: 2px; }
+
+.checkout .recap {
+  background: var(--gris-bg);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+.checkout .recap .l {
+  display: flex; justify-content: space-between;
+  padding: 2px 0;
+}
+.checkout .recap .l.tot {
+  font-size: 16px; font-weight: 800; color: var(--vert-club);
+  border-top: 1px solid var(--gris-bord-clair);
+  margin-top: 6px; padding-top: 8px;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   MES COMMANDES
+   ════════════════════════════════════════════════════════════════════ */
+.orders-list { display: grid; gap: 12px; }
+.order-card {
+  background: white;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 14px 16px;
+}
+.order-card .hd {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px;
+}
+.order-card .hd .date { font-size: 12px; color: var(--gris); }
+.statut-pill {
+  font-size: 11px; font-weight: 700;
+  padding: 4px 10px; border-radius: 999px;
+  text-transform: uppercase; letter-spacing: 0.4px;
+}
+.statut-pill.nouvelle      { background: var(--ambre-bg); color: var(--ambre); }
+.statut-pill.payee         { background: var(--vert-bg); color: var(--vert-club); }
+.statut-pill.recuperee     { background: #dbe7f9; color: #0a3a80; }
+.statut-pill.annulee       { background: var(--rouge-bg); color: var(--rouge); }
+.statut-pill.remboursee    { background: var(--rouge-bg); color: var(--rouge); }
+.order-card .items {
+  font-size: 13px; color: var(--gris-fonce);
+}
+.order-card .ft {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-top: 8px; padding-top: 8px;
+  border-top: 1px dashed var(--gris-bord-clair);
+}
+.order-card .ft .tot {
+  font-weight: 800; font-size: 16px; color: var(--vert-club);
+}
+.order-card .order-actions {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--gris-bord-clair);
+  display: flex; justify-content: flex-end;
+}
+.order-cancel-btn {
+  background: transparent;
+  border: 1.5px solid var(--rouge);
+  color: var(--rouge);
+  padding: 7px 14px;
+  border-radius: var(--radius-btn);
+  font-size: 12px; font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.order-cancel-btn:hover {
+  background: var(--rouge-bg);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   TOASTS
+   ════════════════════════════════════════════════════════════════════ */
+.toast-stack {
+  position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+  z-index: 200;
+  display: flex; flex-direction: column; gap: 8px; align-items: center;
+  pointer-events: none;
+}
+.toast {
+  background: var(--vert-fonce); color: white;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 13px; font-weight: 600;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  animation: toast-in 0.3s ease;
+}
+.toast.err { background: var(--rouge); }
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   MODALE AUTH 4-ÉTAPES (alignée sur index.html)
+   ───────────────────────────────────────────────────────────────────
+   Style identique à la modale Connexion d'index.html : même overlay,
+   même boîte, mêmes champs. Étape 1 (HTML+CSS) seulement — le JS
+   suivra dans l'étape 2 (gestion des transitions email → profil →
+   code → confirmation).
+   ════════════════════════════════════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.auth-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(13,20,36,0.7);
+  backdrop-filter: blur(8px); z-index: 200;
+  align-items: flex-start; justify-content: center;
+  padding: 16px;
+  padding-top: calc(16px + env(safe-area-inset-top, 0px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.auth-overlay.show { display: flex; }
+.auth-box {
+  background: #fff; border-radius: 16px; padding: 32px 28px;
+  width: 100%; max-width: 440px;
+  box-shadow: 0 24px 64px rgba(13,20,36,0.3);
+  animation: fadeUp 0.25s ease both;
+  margin: 8px 0 24px;
+}
+.auth-logo { font-size: 2.5rem; text-align: center; margin-bottom: 10px; }
+.auth-box h2 {
+  font-family: 'Bebas Neue', sans-serif; font-size: 26px;
+  letter-spacing: 1.5px; color: var(--vert-club);
+  text-align: center; margin-bottom: 6px;
+}
+.auth-sub {
+  font-size: 13px; color: var(--gris);
+  text-align: center; margin-bottom: 20px; line-height: 1.5;
+}
+.auth-field { margin-bottom: 14px; }
+.auth-field label {
+  display: block; font-size: 11px; font-weight: 600;
+  color: var(--vert-club); text-transform: uppercase;
+  letter-spacing: 0.5px; margin-bottom: 5px;
+}
+.auth-field input, .auth-field select {
+  width: 100%; padding: 11px 14px; border-radius: 8px;
+  border: 1.5px solid rgba(0,0,0,0.12); font-size: 14px;
+  font-family: 'DM Sans', sans-serif; outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.auth-field input:focus, .auth-field select:focus {
+  border-color: var(--vert-vif);
+  box-shadow: 0 0 0 3px rgba(47,128,237,0.1);
+}
+.auth-btn {
+  width: 100%; padding: 13px; background: var(--vert-club);
+  color: #fff; border: none;
+  border-radius: 8px; font-size: 14px; font-weight: 600;
+  cursor: pointer; font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s; margin-top: 6px;
+}
+.auth-btn:hover:not(:disabled) { background: var(--vert-mid); }
+.auth-btn:disabled { opacity: 0.5; cursor: default; }
+.auth-msg { font-size: 13px; text-align: center; margin-top: 10px; min-height: 18px; }
+.auth-msg.err { color: #c62828; }
+.auth-msg.ok  { color: var(--vert-mid); }
+.auth-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 480px) {
+  .auth-two-col { grid-template-columns: 1fr; }
+  .auth-box { padding: 24px 18px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     NAV (alignée à l'identique sur index.html — différence : les liens
+     vers les pages de l'app principale sont externes ./#xxx au lieu de
+     showPage(), et "Boutique" est l'item actif courant)
+     ══════════════════════════════════════════════════════════════════════ -->
+<nav class="nav" id="nav">
+  <a class="nav-logo" href="./">
+    <div class="nav-logo-ball"><img src="icon-192.png" alt=""></div>
+    <div>
+      <div class="nav-logo-text">US Bouloire Football</div>
+    </div>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li class="nav-welcome" id="navWelcome" aria-hidden="true">
+      <div class="nav-welcome-greeting">Bienvenue 👋</div>
+      <div class="nav-welcome-name" id="navWelcomeName">US Bouloire Football</div>
+    </li>
+    <li class="nav-list-wrap">
+      <a href="./" class="nav-card" id="nav-accueil">
+        <span class="nav-card-icon">🏠</span>
+        <span class="nav-card-text">
+          <span class="nav-card-title">Actualité</span>
+          <span class="nav-card-sub">Tout sur le club</span>
+        </span>
+        <span class="nav-card-arrow">›</span>
+      </a>
+      <a href="./#agenda" class="nav-card" id="nav-agenda">
+        <span class="nav-card-icon">📅</span>
+        <span class="nav-card-text">
+          <span class="nav-card-title">Tableau de bord</span>
+          <span class="nav-card-sub">Calendrier de la saison</span>
+        </span>
+        <span class="nav-card-arrow">›</span>
+      </a>
+      <!-- "Mes équipes" : visible uniquement si l'utilisateur est coach,
+           entraîneur, joueur ou rep_legal d'un joueur. Géré via JS au boot
+           (renderAuthBar) en lisant l'objet client de localStorage. -->
+      <a href="./#mon-equipe" class="nav-card" id="nav-mon-equipe-link" style="display:none;">
+        <span class="nav-card-icon">⚽</span>
+        <span class="nav-card-text">
+          <span class="nav-card-title">Mes équipes <span id="nav-mon-equipe-badge" style="background:rgba(255,193,7,.2);color:#ffc107;border-radius:4px;padding:1px 6px;font-size:9px;font-weight:700;">COACH</span></span>
+          <span class="nav-card-sub">Joueurs &amp; convocations</span>
+        </span>
+        <span class="nav-card-arrow">›</span>
+      </a>
+      <!-- Boutique : on est dessus, donc lien neutralisé + classe active -->
+      <a href="#" class="nav-card active" id="nav-boutique" onclick="event.preventDefault(); showCatalogue(); closeNavMenu();">
+        <span class="nav-card-icon">🛒</span>
+        <span class="nav-card-text">
+          <span class="nav-card-title">Boutique</span>
+          <span class="nav-card-sub">Sweats, t-shirts, maillots</span>
+        </span>
+        <span class="nav-card-arrow">›</span>
+      </a>
+      <a href="./#contact" class="nav-card" id="nav-contact">
+        <span class="nav-card-icon">📞</span>
+        <span class="nav-card-text">
+          <span class="nav-card-title">Contact &amp; infos</span>
+          <span class="nav-card-sub">Adresse, mails, horaires</span>
+        </span>
+        <span class="nav-card-arrow">›</span>
+      </a>
+      <!-- "Mes commandes" : retiré de la nav (mai 2026) — la liste est
+           désormais accessible depuis Mon espace (index.html#commandes). -->
+    </li>
+    <li class="nav-burger-footer" aria-hidden="true">
+      <div class="nbf-ball"><img src="icon-192.png" alt=""></div>
+      <div class="nbf-brand">US Bouloire Football</div>
+      <div class="nbf-slogan">« Le plaisir du jeu avant tout »</div>
+      <div>© 2026 · Sarthe</div>
+    </li>
+  </ul>
+  <div id="authBar"></div>
+  <button class="nav-burger" id="navBurger" onclick="toggleNavMenu()" aria-label="Menu" type="button">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Overlay menu mobile -->
+<div class="nav-mobile-overlay" id="navMobileOverlay" onclick="toggleNavMenu()"></div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     LAYOUT
+     Wrapper externe `.page-shop-wrap` qui porte le padding-top nécessaire
+     pour passer sous la nav fixe. À l'intérieur : header de page (bandeau
+     vert cohérent avec les autres pages du site) puis grille produits.
+     ══════════════════════════════════════════════════════════════════════ -->
+<div class="page-shop-wrap">
+
+  <div class="page-header">
+    <h2 id="shopHeaderTitle">Boutique du club</h2>
+    <p id="shopHeaderSub">Sweats, t-shirts, maillots officiels</p>
+  </div>
+
+  <div class="shop-wrap">
+    <main class="shop-main">
+
+      <!-- Intro bannière visible si non connecté -->
+      <div class="intro-banner" id="introBanner">
+        <div class="icon-side">🛒</div>
+      <div class="txt">
+        <h2>Bienvenue dans le vestiaire en ligne du club</h2>
+        <p>Parcours les articles librement. Tu pourras passer commande après t'être connecté·e avec ton email.</p>
+      </div>
+      <button id="introLoginBtn">Se connecter</button>
+    </div>
+
+    <!-- Pane catalogue -->
+    <section id="paneCatalogue">
+      <div class="filters-bar" id="filtersBar"></div>
+      <div id="gridProduits" class="grid-produits"></div>
+    </section>
+
+    <!-- Section "Mes commandes" retirée (mai 2026) : la liste est désormais
+         dans Mon espace (index.html#commandes), onglet Commandes. -->
+
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       PANIER STICKY DESKTOP
+       ══════════════════════════════════════════════════════════════════════ -->
+  <aside class="shop-aside">
+    <div class="cart-side" id="cartSide">
+      <div class="cart-hd">
+        <span>🛒 Panier</span>
+        <span class="cnt" id="cartCntSide">0</span>
+      </div>
+      <div class="cart-body" id="cartBodySide"></div>
+      <div class="cart-foot">
+        <div class="total-line">
+          <span class="lbl">Total</span>
+          <span class="val" id="cartTotalSide">0,00 €</span>
+        </div>
+        <button class="btn-checkout" id="btnCheckoutSide" disabled>Passer commande</button>
+      </div>
+    </div>
+  </aside>
+  </div>
+</div><!-- /.page-shop-wrap -->
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     DRAWER NOTIFS (MVP)
+     Liste simple des notifs récupérées via USB.apiPost('get_notifs').
+     Sur clic d'une notif → redirige vers index.html#inscription pour
+     l'action complète (le routeur d'index.html gère le _handleNotifClick).
+     ══════════════════════════════════════════════════════════════════════ -->
+<div id="notifsBackdrop" onclick="closeNotifsDrawer()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:998;opacity:0;transition:opacity .2s;"></div>
+<aside id="notifsDrawer" aria-hidden="true" style="position:fixed;top:0;right:0;bottom:0;width:100%;max-width:420px;background:#fff;z-index:999;transform:translateX(100%);transition:transform .25s ease-out;display:flex;flex-direction:column;box-shadow:-4px 0 20px rgba(0,0,0,.15);">
+  <header style="background:var(--vert-club);color:#fff;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:18px;">🔔</span>
+      <span style="font-size:15px;font-weight:600;">Notifications</span>
+      <span id="notifsHeaderCount" style="font-size:11px;background:rgba(255,255,255,.18);border-radius:10px;padding:2px 8px;"></span>
+    </div>
+    <button onclick="closeNotifsDrawer()" type="button" aria-label="Fermer" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1;padding:0 4px;">✕</button>
+  </header>
+  <div id="notifsActions" style="display:none;padding:10px 16px;border-bottom:1px solid rgba(0,0,0,.06);background:#fafafa;">
+    <button id="notifsMarkAllBtn" type="button" onclick="markAllNotifsRead()" style="width:100%;background:#fff;border:1px solid rgba(10,58,128,.25);color:#0a3a80;border-radius:8px;padding:8px 12px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">✓ Tout marquer comme lu</button>
+  </div>
+  <div id="notifsList" style="flex:1;overflow-y:auto;padding:8px 0;-webkit-overflow-scrolling:touch;">
+    <div id="notifsEmpty" style="padding:60px 24px;text-align:center;color:#888;">
+      <div style="font-size:42px;margin-bottom:12px;">⏳</div>
+      <div style="font-size:14px;">Chargement…</div>
+    </div>
+  </div>
+  <footer style="padding:10px 16px;border-top:1px solid rgba(0,0,0,.06);background:#fafafa;font-size:11px;color:#888;text-align:center;">
+    Pour les actions complètes (validation, dossier…), va sur <a href="./#inscription" style="color:var(--vert-club);font-weight:600;text-decoration:none;">Mon espace</a>
+  </footer>
+</aside>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     FAB PANIER MOBILE
+     ══════════════════════════════════════════════════════════════════════ -->
+<button class="fab-cart" id="fabCart">
+  <span class="em">🛒</span>
+  <span>Panier</span>
+  <span class="cnt" id="fabCnt">0</span>
+</button>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     DRAWER PANIER MOBILE
+     ══════════════════════════════════════════════════════════════════════ -->
+<div class="drawer-bg" id="drawerBg"></div>
+<div class="drawer-cart" id="drawerCart" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+  <div class="grip"></div>
+  <div class="cart-hd">
+    <span id="drawerTitle">🛒 Mon panier</span>
+    <span class="cnt" id="cartCntDrawer">0</span>
+  </div>
+  <div class="cart-body" id="cartBodyDrawer"></div>
+  <div class="cart-foot">
+    <div class="total-line">
+      <span class="lbl">Total</span>
+      <span class="val" id="cartTotalDrawer">0,00 €</span>
+    </div>
+    <button class="btn-checkout" id="btnCheckoutDrawer" disabled>Passer commande</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     MODALE PRODUIT
+     ══════════════════════════════════════════════════════════════════════ -->
+<div class="modal-bg" id="modalProduit" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="mpHead">Produit</h2>
+      <button class="modal-close" data-close="modalProduit" aria-label="Fermer">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="carousel" id="mpCarousel">
+        <button class="carousel-arrow left" id="mpArrowL" aria-label="Photo précédente">‹</button>
+        <button class="carousel-arrow right" id="mpArrowR" aria-label="Photo suivante">›</button>
+      </div>
+      <div class="carousel-thumbs" id="mpThumbs"></div>
+      <div class="modal-product-info" id="mpInfo"></div>
+    </div>
+    <div class="modal-foot">
+      <div>
+        <div class="prix-bx" id="mpPrix">—</div>
+      </div>
+      <button class="add-btn" id="mpAddBtn">Ajouter au panier</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     MODALE AUTH (OTP)
+     ══════════════════════════════════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════════════════════════════════
+     MODALE AUTH (style aligné sur index.html)
+     ───────────────────────────────────────────────────────────────────
+     Visuellement identique à la modale Connexion d'index.html
+     (overlay vert sombre + boîte blanche + même typo et même style).
+     Fonctionnellement : 2 étapes (email → code) comme l'ancienne
+     modale boutique, pour préserver le comportement actuel sans
+     introduire la création de profil. Le back rejette si l'email est
+     inconnu — on affiche un message dans la modale pour rediriger
+     vers la home dans ce cas.
+     ══════════════════════════════════════════════════════════════════════ -->
+<div id="authModal" class="auth-overlay" onclick="if(event.target===this)closeAuthModalNew()">
+  <div class="auth-box" onclick="event.stopPropagation()">
+    <!-- Étape 1 : saisie email -->
+    <div id="aStep1">
+      <div class="auth-logo">⚽</div>
+      <h2>Connexion</h2>
+      <p class="auth-sub">Entrez votre email — un code vous sera envoyé.</p>
+      <div class="auth-field">
+        <label>Email *</label>
+        <input type="email" id="aEmail" placeholder="vous@email.fr" autocomplete="email">
+      </div>
+      <button class="auth-btn" id="aBtn1" type="button">Continuer →</button>
+      <div class="auth-msg" id="aMsg1"></div>
+    </div>
+    <!-- Étape 2 : saisie code OTP -->
+    <div id="aStep3" style="display:none">
+      <div class="auth-logo">📬</div>
+      <h2>Code de vérification</h2>
+      <p class="auth-sub" id="aStep3Sub"></p>
+      <div class="auth-field">
+        <label>Code à 6 chiffres *</label>
+        <input type="text" id="aCode" placeholder="123456" maxlength="6" inputmode="numeric"
+               autocomplete="one-time-code" pattern="[0-9]{6}"
+               style="font-size:2rem;letter-spacing:.4em;text-align:center;">
+      </div>
+      <button class="auth-btn" id="aBtn3" type="button">Valider →</button>
+      <div class="auth-msg" id="aMsg3"></div>
+      <p style="font-size:.78rem;color:var(--gris);text-align:center;margin-top:12px;">
+        Pas reçu ? <a href="#" id="aResendLink" style="color:var(--vert-mid);">Renvoyer</a>
+        · <a href="#" id="aBackEmailLink" style="color:var(--gris);">Modifier l'email</a>
+      </p>
+    </div>
+    <!-- Étape 3 : succès -->
+    <div id="aStep4" style="display:none;text-align:center">
+      <div style="font-size:3.5rem;margin-bottom:12px;">✅</div>
+      <h2>Bienvenue !</h2>
+      <p class="auth-sub" id="aStep4Sub">Tu es maintenant connecté·e. Bonnes emplettes 🛒</p>
+      <button class="auth-btn" type="button" onclick="closeAuthModalNew()">Continuer →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     MODALE CHECKOUT
+     ══════════════════════════════════════════════════════════════════════ -->
+<div class="modal-bg" id="modalCheckout" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-head">
+      <h2>🛒 Finaliser la commande</h2>
+      <button class="modal-close" data-close="modalCheckout" aria-label="Fermer">✕</button>
+    </div>
+    <div class="modal-body checkout">
+
+      <div id="checkoutBody">
+        <div class="cart-empty"><div class="em">⏳</div><div class="t">Chargement…</div></div>
+      </div>
+
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" data-close="modalCheckout">Annuler</button>
+      <button class="add-btn" id="btnSubmitOrder" disabled>Confirmer la commande</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     MODALE CONFIRMATION COMMANDE
+     ══════════════════════════════════════════════════════════════════════ -->
+<div class="modal-bg" id="modalConfirmed" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-head">
+      <h2>✅ Commande enregistrée</h2>
+      <button class="modal-close" data-close="modalConfirmed" aria-label="Fermer">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="confirmedBody"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" data-close="modalConfirmed">Fermer</button>
+      <button class="add-btn" id="btnSeeOrders">Voir mes commandes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toasts -->
+<div class="toast-stack" id="toastStack"></div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     FOOTER (aligné sur index.html)
+     ══════════════════════════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">US Bouloire Football</div>
+    <div class="footer-slogan">« Le plaisir du jeu avant tout »</div>
+    <!-- Version à la place de l'année — voir index.html. -->
+    <div class="footer-credit"><span id="appVersionTag"></span> · <a href="https://www.radegondeetquinoa.fr" target="_blank" rel="noopener">Fait avec ❤️ par Radegonde &amp; Quinoa</a></div>
+  </div>
+</footer>
+
+<script>
+// ⚠️ À BUMPER À CHAQUE DÉPLOIEMENT, comme APP_VERSION dans index.html et
+//    CACHE_VERSION dans sw.js. Cette page porte elle aussi son JavaScript en
+//    ligne : sans numéro gravé dedans, impossible de savoir si la coquille
+//    servie est la bonne.
+window.APP_VERSION = 'v1';
+</script>
+<script src="./usb-common.js"></script>
+<script>
+// ════════════════════════════════════════════════════════════════════════
+//  ÉTAT
+// ════════════════════════════════════════════════════════════════════════
+// ────────────────────────────────────────────────────────────────────────
+// Redirection immédiate #mes-commandes → Mon espace (mai 2026)
+// L'ancien onglet "Mes commandes" de la boutique a été déplacé dans Mon
+// espace (index.html). On redirige ici les liens / notifs existants vers
+// la nouvelle URL avant tout autre traitement de la page.
+// ────────────────────────────────────────────────────────────────────────
+if (location.hash === '#mes-commandes') {
+  window.location.replace('./index.html#commandes');
+  // Note : on continue l'exécution quand même, le browser va naviguer mais
+  // le JS courant peut finir son tour (anti-FOUC).
+}
+
+const state = {
+  produits: [],
+  categories: [],
+  filtreCategorie: 'tout',
+  helloasso_url: '',
+  cart: [],             // [{ produit_id, qty }]
+  loading: true,
+  // Auth temporaire (lors du flow OTP)
+  tmpEmail: '',
+  // Checkout — profil de la personne connectée (chargé à l'ouverture du checkout
+  // via shop_get_my_order_profile). La commande est passée par cette personne.
+  profile: null,        // { email, nom, prenom, age }
+  payMode: null,
+  myOrders: [],
+};
+
+// ════════════════════════════════════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════════════════════════════════════
+const esc = USB.escapeHtml;
+const eur = USB.formatEuros;
+const $ = (id) => document.getElementById(id);
+
+function toast(msg, isErr) {
+  const stack = $('toastStack');
+  const t = document.createElement('div');
+  t.className = 'toast' + (isErr ? ' err' : '');
+  t.textContent = msg;
+  stack.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .3s'; }, 2200);
+  setTimeout(() => t.remove(), 2600);
+}
+
+function showModal(id) {
+  $(id).classList.add('visible');
+  document.body.classList.add('usb-no-scroll');
+}
+function hideModal(id) {
+  $(id).classList.remove('visible');
+  // Si plus aucune modale ouverte → on lève le scroll lock
+  if (!document.querySelector('.modal-bg.visible') && !$('drawerCart').classList.contains('visible')) {
+    document.body.classList.remove('usb-no-scroll');
+  }
+}
+
+// Localstorage panier (persistance entre sessions)
+const CART_KEY = 'usb_shop_cart';
+function saveCart() { try { localStorage.setItem(CART_KEY, JSON.stringify(state.cart)); } catch(_) {} }
+function loadCart() {
+  try {
+    const raw = localStorage.getItem(CART_KEY);
+    if (raw) state.cart = JSON.parse(raw) || [];
+  } catch(_) {}
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  AUTH
+// ════════════════════════════════════════════════════════════════════════
+// Rendu de l'authBar dans la nav (pastille utilisateur + cloche notifs + déco).
+// Aligné sur la logique d'index.html — au clic sur "Mon espace" ou sur une
+// notif, on redirige vers index.html#inscription (les actions complètes sont
+// gérées par le routeur d'index).
+function renderAuthBar() {
+  const logged = USB.isLoggedIn();
+  const el = $('authBar');
+  if (!el) return;
+  if (logged) {
+    // Récupère le prénom depuis l'objet client (déposé par index.html après login)
+    let prenom = 'Mon compte';
+    try {
+      const c = JSON.parse(localStorage.getItem('usb_foot_v1'));
+      if (c) prenom = c.prenom || c.nom || c.email || prenom;
+    } catch(_) {}
+    el.innerHTML = `<div style="display:flex;align-items:center;gap:8px;">
+      <button id="notifBell" title="Notifs" type="button" style="position:relative;background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:20px;width:32px;height:32px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;" onmouseover="this.style.background='rgba(255,255,255,.2)'" onmouseout="this.style.background='rgba(255,255,255,.12)'">
+        🔔
+        <span id="notifBadge" hidden style="position:absolute;top:-2px;right:-2px;background:#e53935;color:#fff;font-size:10px;font-weight:700;border-radius:10px;padding:1px 5px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;line-height:1;border:2px solid #0a3a80;">0</span>
+      </button>
+      <button class="shop-etat" id="shopEtat" type="button" title="" onclick="rechargerCatalogue()">
+        <span class="shop-etat-pt"></span>
+      </button>
+      <a id="monEspaceLink" href="./#inscription" title="Voir mon espace" style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border-radius:20px;padding:6px 14px;font-size:12px;color:#fff;cursor:pointer;text-decoration:none;font-weight:500;transition:background .15s;" onmouseover="this.style.background='rgba(255,255,255,.2)'" onmouseout="this.style.background='rgba(255,255,255,.12)'">
+        👤 ${USB.escapeHtml(prenom)} <span style="opacity:.65;font-size:11px;">— Mon espace</span>
+      </a>
+      <button id="navAuthBtn" type="button" title="Se déconnecter" style="background:none;border:none;color:rgba(255,255,255,.55);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;padding:4px 6px;">✕</button>
+    </div>`;
+    $('navAuthBtn').addEventListener('click', onAuthBtnClick);
+    $('notifBell').addEventListener('click', openNotifsDrawer);
+    // La pastille est recréée à chaque rendu de cette barre : sans repeinte
+    // immédiate, elle repartirait sur son gris par défaut.
+    try { _shopMajEtat(); } catch(_) {}
+    // Récupère le compteur de notifs non lues en arrière-plan
+    loadNotifsCount();
+  } else {
+    // Non connecté : bouton "🔐 Connexion" style pill (aligné sur index.html)
+    el.innerHTML = `<button onclick="onAuthBtnClick()" type="button" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:20px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:background .15s;" onmouseover="this.style.background='rgba(255,255,255,.25)'" onmouseout="this.style.background='rgba(255,255,255,.15)'">🔐 Connexion</button>`;
+  }
+  // (Le lien "Mes commandes" a été déplacé dans Mon espace, index.html#commandes.)
+  // "Mes équipes" : visible si coach/entraîneur (équipes encadrées) ou
+  // membre/parent (équipes visibles). On lit l'objet client stocké en
+  // localStorage par index.html (clé 'usb_foot_v1') — pas d'appel réseau.
+  // Le badge change selon le rôle (COACH / ENTRAÎNEUR / MEMBRE).
+  _renderMonEquipeNav(logged);
+  // Bannière intro affichée tant qu'on n'est pas connecté
+  const banner = $('introBanner');
+  if (banner) banner.style.display = logged ? 'none' : '';
+  // Header de bienvenue dans le burger mobile
+  renderNavWelcome();
+}
+
+// ── Affichage conditionnel de l'onglet "Mes équipes" dans la nav ──────
+// Lit l'objet client (déposé en localStorage par index.html après login),
+// inspecte ses équipes encadrées (.equipes) et visibles (.equipes_visibles)
+// pour déterminer si l'utilisateur a accès au tableau de bord équipe.
+// Sans appel réseau, juste une lecture localStorage.
+function _renderMonEquipeNav(logged) {
+  const navItem = $('nav-mon-equipe-link');
+  const navBadge = $('nav-mon-equipe-badge');
+  if (!navItem) return;
+  if (!logged) { navItem.style.display = 'none'; return; }
+  let c = null;
+  try { c = JSON.parse(localStorage.getItem('usb_foot_v1')); } catch(_) {}
+  const isCoach = !!(c && c.equipes && c.equipes.length);
+  const hasTeam = !!(c && c.equipes_visibles && c.equipes_visibles.length);
+  if (!isCoach && !hasTeam) { navItem.style.display = 'none'; return; }
+  navItem.style.display = '';
+  if (navBadge) {
+    if (isCoach) {
+      // Distinction coach / entraîneur (cf. logique d'index.html)
+      const isEntraineurSeul = c.est_entraineur && !c.est_coach;
+      if (isEntraineurSeul) {
+        navBadge.textContent = 'ENTRAÎNEUR';
+        navBadge.style.background = 'rgba(214,40,40, .18)';
+        navBadge.style.color = '#d62828';
+      } else {
+        navBadge.textContent = 'COACH';
+        navBadge.style.background = 'rgba(255,193,7,.2)';
+        navBadge.style.color = '#ffc107';
+      }
+    } else {
+      navBadge.textContent = 'MEMBRE';
+      navBadge.style.background = 'rgba(47,128,237,.25)';
+      navBadge.style.color = '#bcd3f5';
+    }
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  NOTIFS (MVP boutique)
+//  ───────────────────────────────────────────────────────────────────────
+//  Version simplifiée du système de notifs d'index.html :
+//    - 1 appel `get_notifs` au boot pour récupérer la liste + le compteur
+//    - drawer latéral qui affiche la liste (date relative + titre + corps)
+//    - bouton "Tout marquer comme lu" → `mark_all_notifs_read`
+//    - sur clic d'une notif → redirection vers index.html#inscription
+//      (les actions natives — ouverture modale, navigation match, etc. —
+//      sont gérées par le router d'index.html ; on évite de tout dupliquer)
+//  TODO: à factoriser dans usb-common.js si on en a besoin sur admin.html
+//        ou ailleurs (composant USB.notifsDrawer).
+// ════════════════════════════════════════════════════════════════════════
+let _notifsCache = [];          // liste mémoire des notifs récupérées
+let _notifsLoading = false;     // anti double-fetch
+let _notifsMarkInFlight = false;// anti double-mark-as-read
+
+// Compteur mémorisé du dernier chargement réussi des notifications.
+let _notifsVersionVue = '';
+
+async function loadNotifsCount() {
+  if (!USB.isLoggedIn()) return;
+  if (_notifsLoading) return;
+  _notifsLoading = true;
+  try {
+    // ⚡ Même garde que pour le catalogue : si le domaine `notifs` n'a pas
+    //    bougé depuis le dernier chargement réussi, le badge affiché est
+    //    déjà juste. On ne rappelle pas Apps Script pour réapprendre qu'il
+    //    ne s'est rien passé.
+    try {
+      const p = await USB.probeVersions();
+      const cur = p && p.notifs;
+      if (cur && cur === _notifsVersionVue) return;
+    } catch (_) { /* sonde KO → on charge normalement */ }
+
+    const res = await USB.apiPost('get_notifs', {});
+    if (res && res.ok) {
+      _notifsCache = Array.isArray(res.notifs) ? res.notifs : [];
+      const nonLues = _notifsCache.filter(n => !n.lue).length;
+      _updateNotifBadge(nonLues);
+      // Mémorisé après un chargement réussi seulement.
+      try {
+        const p2 = await USB.probeVersions();
+        if (p2 && p2.notifs) _notifsVersionVue = p2.notifs;
+      } catch (_) {}
+    }
+  } catch(_) {
+    // Silencieux : si le réseau ou le back est down, on n'embête pas l'user
+  } finally {
+    _notifsLoading = false;
+  }
+}
+
+function _updateNotifBadge(nonLues) {
+  const badge = $('notifBadge');
+  if (!badge) return;
+  if (nonLues > 0) {
+    badge.hidden = false;
+    badge.textContent = nonLues > 99 ? '99+' : String(nonLues);
+  } else {
+    badge.hidden = true;
+  }
+}
+
+function openNotifsDrawer() {
+  const backdrop = $('notifsBackdrop');
+  const drawer = $('notifsDrawer');
+  if (!backdrop || !drawer) return;
+  backdrop.style.display = 'block';
+  // Frame suivante pour que la transition s'applique
+  requestAnimationFrame(() => {
+    backdrop.style.opacity = '1';
+    drawer.style.transform = 'translateX(0)';
+    drawer.setAttribute('aria-hidden', 'false');
+  });
+  // Rafraîchit la liste à l'ouverture (cas où une nouvelle notif est arrivée)
+  _refreshNotifsDrawer();
+}
+
+function closeNotifsDrawer() {
+  const backdrop = $('notifsBackdrop');
+  const drawer = $('notifsDrawer');
+  if (!backdrop || !drawer) return;
+  backdrop.style.opacity = '0';
+  drawer.style.transform = 'translateX(100%)';
+  drawer.setAttribute('aria-hidden', 'true');
+  setTimeout(() => { backdrop.style.display = 'none'; }, 250);
+}
+
+async function _refreshNotifsDrawer() {
+  const list = $('notifsList');
+  const headerCount = $('notifsHeaderCount');
+  const actions = $('notifsActions');
+  if (!list) return;
+  // Si pas connecté, on ne devrait pas pouvoir ouvrir, mais par sécurité
+  if (!USB.isLoggedIn()) {
+    list.innerHTML = `<div style="padding:60px 24px;text-align:center;color:#888;"><div style="font-size:42px;margin-bottom:12px;">🔐</div><div>Connecte-toi pour voir tes notifications.</div></div>`;
+    if (actions) actions.style.display = 'none';
+    if (headerCount) headerCount.textContent = '';
+    return;
+  }
+  // Fetch frais
+  try {
+    const res = await USB.apiPost('get_notifs', {});
+    if (res && res.ok) _notifsCache = Array.isArray(res.notifs) ? res.notifs : [];
+  } catch(_) {}
+  const notifs = _notifsCache;
+  const nonLues = notifs.filter(n => !n.lue).length;
+  if (headerCount) headerCount.textContent = notifs.length ? `${notifs.length}` : '';
+  if (actions) actions.style.display = nonLues > 0 ? '' : 'none';
+  // Render
+  if (!notifs.length) {
+    list.innerHTML = `<div style="padding:60px 24px;text-align:center;color:#888;"><div style="font-size:42px;margin-bottom:12px;">📭</div><div style="font-size:14px;">Aucune notification pour l'instant.</div></div>`;
+    return;
+  }
+  list.innerHTML = notifs.map((n, idx) => {
+    const lue = !!n.lue;
+    const date = _notifDateFmt(n.date_iso || n.date || '');
+    const titre = USB.escapeHtml(n.titre || 'Notification');
+    const corps = USB.escapeHtml(n.corps || n.message || '');
+    return `<div class="notif-item" data-idx="${idx}" style="padding:14px 18px;border-bottom:1px solid rgba(0,0,0,.06);cursor:pointer;display:flex;gap:12px;align-items:flex-start;${lue ? 'opacity:.65;' : 'background:rgba(10,58,128,.04);'}">
+      <div style="width:8px;height:8px;border-radius:50%;background:${lue ? '#bbb' : '#0a3a80'};margin-top:6px;flex-shrink:0;"></div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:${lue ? '500' : '600'};color:#1b1b1b;margin-bottom:3px;">${titre}</div>
+        ${corps ? `<div style="font-size:12.5px;color:#555;line-height:1.45;margin-bottom:4px;">${corps}</div>` : ''}
+        <div style="font-size:11px;color:#999;">${date}</div>
+      </div>
+    </div>`;
+  }).join('');
+  // Click handler : redirige vers index#inscription (l'action complète y est gérée)
+  list.querySelectorAll('.notif-item').forEach(el => {
+    el.addEventListener('click', () => {
+      // Pour les actions complètes (validation licence, navigation match, etc.),
+      // on délègue à index.html qui a tout le routage en place.
+      window.location.href = './#inscription';
+    });
+  });
+}
+
+async function markAllNotifsRead() {
+  if (_notifsMarkInFlight) return;
+  if (!USB.isLoggedIn()) return;
+  _notifsMarkInFlight = true;
+  const btn = $('notifsMarkAllBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Marquage…'; }
+  try {
+    const res = await USB.apiPost('mark_all_notifs_read', {});
+    if (res && res.ok) {
+      _notifsCache = _notifsCache.map(n => ({ ...n, lue: true }));
+      _updateNotifBadge(0);
+      _refreshNotifsDrawer();
+      if (window.USB && USB.toast) USB.toast('Tout est marqué comme lu ✓', { type: 'success' });
+    }
+  } catch(_) {
+    if (window.USB && USB.toast) USB.toast('Impossible de marquer', { type: 'error' });
+  } finally {
+    _notifsMarkInFlight = false;
+    if (btn) { btn.disabled = false; btn.textContent = '✓ Tout marquer comme lu'; }
+  }
+}
+
+// Format date relatif simplifié ("Il y a 2 h", "Hier", "3 mars")
+function _notifDateFmt(isoOrStr) {
+  if (!isoOrStr) return '';
+  const d = new Date(isoOrStr);
+  if (isNaN(d)) return String(isoOrStr);
+  const now = new Date();
+  const diffMs = now - d;
+  const diffMin = Math.floor(diffMs / 60000);
+  if (diffMin < 1) return "À l'instant";
+  if (diffMin < 60) return `Il y a ${diffMin} min`;
+  const diffH = Math.floor(diffMin / 60);
+  if (diffH < 24) return `Il y a ${diffH} h`;
+  const diffJ = Math.floor(diffH / 24);
+  if (diffJ === 1) return 'Hier';
+  if (diffJ < 7) return `Il y a ${diffJ} j`;
+  const mois = ['janv','févr','mars','avr','mai','juin','juil','août','sept','oct','nov','déc'];
+  return `${d.getDate()} ${mois[d.getMonth()]}`;
+}
+
+
+// Met à jour le drawer mobile (Bonjour <prénom> si connecté, sinon Bienvenue).
+// On n'a pas le prénom côté boutique tant qu'on n'a pas appelé une route
+// authentifiée — on se contente donc d'un message générique mais cohérent.
+function renderNavWelcome() {
+  const nameEl  = $('navWelcomeName');
+  const greetEl = document.querySelector('#navWelcome .nav-welcome-greeting');
+  if (!nameEl || !greetEl) return;
+  if (USB.isLoggedIn()) {
+    greetEl.textContent = 'Bonjour 👋';
+    nameEl.textContent  = 'Mon compte';
+  } else {
+    greetEl.textContent = 'Bienvenue 👋';
+    nameEl.textContent  = 'US Bouloire Football';
+  }
+}
+
+// Alias rétrocompat : conserve l'ancien nom updateAuthUI() utilisé ailleurs
+// dans le fichier (verifyCode, logout, etc.) — délègue à renderAuthBar.
+function updateAuthUI() { renderAuthBar(); }
+
+async function onAuthBtnClick() {
+  if (USB.isLoggedIn()) {
+    await USB.logout();
+    renderAuthBar();
+    toast('Déconnecté·e');
+    // Si on était sur "Mes commandes", retour catalogue
+    showCatalogue();
+  } else {
+    openAuthModal();
+  }
+}
+
+$('introLoginBtn').addEventListener('click', openAuthModal);
+
+// ════════════════════════════════════════════════════════════════════════
+//  MODALE AUTH (style aligné sur index.html)
+//  ───────────────────────────────────────────────────────────────────────
+//  Visuel : overlay vert sombre + auth-box blanche (identique à index).
+//  Fonctionnel : 2 étapes (email → code) via USB.sendCode / USB.verifyCode.
+//  Si l'email n'a pas de profil → message dans la modale invitant à passer
+//  par la home pour créer un dossier. Pas de création de profil inline ici.
+// ════════════════════════════════════════════════════════════════════════
+function openAuthModal() {
+  _aShowStep('aStep1');
+  $('aEmail').value = '';
+  $('aCode').value = '';
+  $('aMsg1').textContent = '';
+  $('aMsg1').className = 'auth-msg';
+  $('aMsg3').textContent = '';
+  $('aMsg3').className = 'auth-msg';
+  $('aBtn1').disabled = false;
+  $('aBtn1').textContent = 'Continuer →';
+  $('aBtn3').disabled = false;
+  $('aBtn3').textContent = 'Valider →';
+  $('authModal').classList.add('show');
+  setTimeout(() => $('aEmail').focus(), 100);
+}
+
+function closeAuthModalNew() {
+  $('authModal').classList.remove('show');
+}
+
+function _aShowStep(stepId) {
+  ['aStep1','aStep3','aStep4'].forEach(id => {
+    const el = $(id);
+    if (el) el.style.display = (id === stepId) ? '' : 'none';
+  });
+}
+
+function _aMsg(boxId, text, kind) {
+  const el = $(boxId);
+  el.textContent = text || '';
+  el.className = 'auth-msg' + (kind ? ' ' + kind : '');
+}
+
+// Étape 1 → envoi du code
+$('aBtn1').addEventListener('click', async () => {
+  const email = USB.cleanEmail($('aEmail').value);
+  if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+    _aMsg('aMsg1', 'Email invalide.', 'err');
+    return;
+  }
+  const btn = $('aBtn1');
+  btn.disabled = true; btn.textContent = 'Envoi…';
+  _aMsg('aMsg1', '');
+  const res = await USB.sendCode(email);
+  btn.disabled = false; btn.textContent = 'Continuer →';
+  if (!res || !res.ok) {
+    const reasons = {
+      trop_frequent: `Code déjà envoyé. Réessaye dans ${res?.wait || 30}s.`,
+      trop_de_demandes: 'Trop de demandes. Patiente quelques minutes.',
+      quota_dailymail: "On a atteint le quota d'emails du jour. Réessaye demain.",
+    };
+    _aMsg('aMsg1', reasons[res?.reason] || 'Échec d\'envoi. Réessaye dans un instant.', 'err');
+    return;
+  }
+  state.tmpEmail = email;
+  $('aStep3Sub').innerHTML = `Code envoyé à <strong>${USB.escapeHtml(email)}</strong>. Valable 10 minutes.`;
+  _aShowStep('aStep3');
+  setTimeout(() => $('aCode').focus(), 80);
+});
+
+// Étape 2 → vérification du code
+$('aBtn3').addEventListener('click', async () => {
+  const code = ($('aCode').value || '').trim();
+  if (!/^\d{6}$/.test(code)) {
+    _aMsg('aMsg3', 'Le code doit faire 6 chiffres.', 'err');
+    return;
+  }
+  const btn = $('aBtn3');
+  btn.disabled = true; btn.textContent = 'Vérification…';
+  _aMsg('aMsg3', '');
+  const res = await USB.verifyCode(state.tmpEmail, code);
+  btn.disabled = false; btn.textContent = 'Valider →';
+  if (!res || !res.ok) {
+    const reasons = {
+      code_invalide: 'Code incorrect. Vérifie ton email ou demande-en un nouveau.',
+      trop_d_essais: 'Trop d\'essais. Demande un nouveau code.',
+      inscription_incomplete: "Cet email n'a pas encore de profil. Crée-le d'abord depuis la page d'accueil.",
+    };
+    _aMsg('aMsg3', reasons[res?.reason] || 'Erreur. Réessaye.', 'err');
+    return;
+  }
+  // Succès → écran de bienvenue
+  _aShowStep('aStep4');
+  updateAuthUI();
+  toast('Bienvenue 👋');
+  // Si l'utilisateur était en train de checkout, on relance le flow après
+  // la fermeture de la modale
+  if (state.pendingCheckout) {
+    state.pendingCheckout = false;
+    setTimeout(() => { closeAuthModalNew(); openCheckout(); }, 800);
+  }
+});
+
+// Renvoi du code (lien dans l'étape 2)
+$('aResendLink').addEventListener('click', async (e) => {
+  e.preventDefault();
+  if (!state.tmpEmail) return;
+  const link = e.currentTarget;
+  link.textContent = 'Envoi…';
+  link.style.pointerEvents = 'none';
+  const res = await USB.sendCode(state.tmpEmail);
+  link.textContent = 'Renvoyer';
+  link.style.pointerEvents = '';
+  if (res && res.ok) {
+    _aMsg('aMsg3', 'Nouveau code envoyé ✓', 'ok');
+  } else {
+    _aMsg('aMsg3', 'Échec d\'envoi. Réessaye dans un instant.', 'err');
+  }
+});
+
+// Retour à l'étape email
+$('aBackEmailLink').addEventListener('click', (e) => {
+  e.preventDefault();
+  _aShowStep('aStep1');
+  _aMsg('aMsg3', '');
+  setTimeout(() => $('aEmail').focus(), 80);
+});
+
+// Touche Entrée pour soumettre
+$('aEmail').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('aBtn1').click(); });
+$('aCode').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('aBtn3').click(); });
+$('aCode').addEventListener('input', (e) => {
+  e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
+});
+
+// Réaction à un event auth-required du back (token expiré)
+window.addEventListener('usb:auth-required', () => {
+  updateAuthUI();
+  toast('Session expirée, reconnecte-toi 🔐', true);
+});
+
+// ════════════════════════════════════════════════════════════════════════
+//  CATALOGUE
+// ════════════════════════════════════════════════════════════════════════
+// ── État des données de la boutique ────────────────────────────────
+//
+//  Même principe que côté famille : le catalogue peut venir du cache, et le
+//  visiteur doit pouvoir savoir de quand il date. Ici le seuil est large —
+//  un catalogue de club change quelques fois par saison, pas à l'heure.
+let _shopChargeEnCours = 0;
+let _shopDernierChargement = 0;
+
+function _shopMajEtat() {
+  const el = document.getElementById('shopEtat');
+  if (!el) return;
+  let etat, texte;
+  if (_shopChargeEnCours > 0) {
+    etat = 'charge'; texte = 'Chargement du catalogue…';
+  } else if (!_shopDernierChargement) {
+    etat = 'vieux'; texte = 'Catalogue non chargé — clique pour réessayer';
+  } else {
+    const min = Math.floor((Date.now() - _shopDernierChargement) / 60000);
+    if (min < 120) {
+      etat = 'ok';
+      texte = min < 1 ? 'Catalogue à jour' : `Catalogue vérifié il y a ${min} min`;
+    } else {
+      etat = 'vieux';
+      texte = `Catalogue vérifié il y a ${Math.floor(min / 60)} h — clique pour actualiser`;
+    }
+  }
+  el.className = 'shop-etat ' + etat;
+  el.title = texte;
+}
+
+// Rechargement manuel depuis la pastille : on force, donc on court-circuite
+// la garde par compteur.
+async function rechargerCatalogue() {
+  try { localStorage.removeItem('usb_ver_fb_boutique_shop_catalogue'); } catch(_) {}
+  try { localStorage.removeItem('usb_ver_as_boutique_shop_catalogue'); } catch(_) {}
+  await loadCatalogue();
+}
+
+async function loadCatalogue() {
+  // ⚡ Stale-while-revalidate v2 (mai 2026)
+  //  Pattern : on affiche IMMÉDIATEMENT la version cachée dans IndexedDB
+  //  (apparaît en <50ms dès la 2e visite) puis on fetch en parallèle pour
+  //  rafraîchir. La grille est re-rendue silencieusement si la version
+  //  réseau diffère. Si pas de cache → skeleton classique.
+  let hasRendered = false;
+
+  // Helper : applique un résultat (cache ou réseau) au state + render
+  // On retient POURQUOI ça n'a pas marché, pour ne plus confondre deux
+  // situations très différentes : une boutique vide (le club n'a rien mis
+  // en vente) et une boutique injoignable (l'appel a échoué). Le premier
+  // cas est normal, le second demande de réessayer.
+  let dernierEchec = null;
+
+  const applyResult = (res) => {
+    if (!res || !res.ok || !Array.isArray(res.produits)) {
+      dernierEchec = !res ? 'reseau'
+                   : (res.reason || (res.ok === false ? 'refus' : 'forme'));
+      return false;
+    }
+    state.produits      = res.produits;
+    state.helloasso_url = res.helloasso_url || '';
+    buildCategories();
+    renderFiltres();
+    renderGrille();
+    hasRendered = true;
+    return true;
+  };
+
+  // 1. Affiche skeleton TOUT DE SUITE — sera remplacé par le cache ou le réseau
+  $('gridProduits').innerHTML = Array.from({length: 6}).map(() => `
+    <div class="skel-card">
+      <div class="skel skel-photo"></div>
+      <div class="skel skel-line"></div>
+      <div class="skel skel-line short"></div>
+    </div>`).join('');
+
+  // 2. Stale-while-revalidate via USB.apiGetCached :
+  //    - onCachedData : appelé tout de suite si version cachée dispo
+  //    - onFreshData  : appelé après le fetch réseau OK
+  _shopChargeEnCours++;
+  _shopMajEtat();
+  try {
+  await USB.apiGetCached('shop_get_catalogue', null, {
+    cacheKey: 'shop_catalogue',
+    ttlMs: 5 * 60 * 1000, // 5 min — aligné avec le TTL backend
+    // ⚡ Garde par compteur (août 2026) : tant que le domaine `boutique` n'a
+    //    pas bougé côté serveur, le catalogue en cache EST le bon et aucun
+    //    appel Apps Script n'est émis. Un catalogue de club change quelques
+    //    fois par saison — le redemander à chaque visite était le pire
+    //    rapport coût/bénéfice de l'application.
+    gate: 'boutique',
+    onCachedData: (data, isStale) => applyResult(data),
+    onFreshData:  (data) => { _shopDernierChargement = Date.now(); applyResult(data); },
+  });
+  // Servi depuis le cache ou depuis le réseau, dans les deux cas la donnée
+  // affichée est celle que le serveur détient : la garde par compteur ne
+  // rend la main que si rien n'a changé.
+  if (!_shopDernierChargement) _shopDernierChargement = Date.now();
+  } finally {
+    _shopChargeEnCours = Math.max(0, _shopChargeEnCours - 1);
+    _shopMajEtat();
+  }
+
+  // 3. Catalogue vide MAIS réponse valide : ce n'est pas une panne.
+  if (hasRendered && (!state.produits || !state.produits.length)) {
+    $('gridProduits').innerHTML = `
+      <div class="empty-shop" style="grid-column:1/-1">
+        <div class="em">🧺</div>
+        <h3>Aucun article en vente pour le moment</h3>
+        <p>Le club annonce ses commandes groupées ici — maillots, sweats,
+           accessoires. Revenez à la prochaine campagne&nbsp;!</p>
+      </div>`;
+    return;
+  }
+
+  // 4. Si AUCUN rendu n'a pu se faire (pas de cache + réseau KO), message
+  if (!hasRendered) {
+    // ⚠️ Avant, ce message s'affichait dès qu'aucun rendu n'avait eu lieu —
+    // y compris quand le serveur répondait correctement avec un catalogue
+    // VIDE. Le club voyait « momentanément indisponible » alors que rien
+    // n'était en panne : il n'avait simplement rien mis en vente. Un
+    // message d'erreur qui ment fait chercher une panne inexistante.
+    $('gridProduits').innerHTML = `
+      <div class="empty-shop" style="grid-column:1/-1">
+        <div class="em">😬</div>
+        <h3>Boutique momentanément indisponible</h3>
+        <p>Réessaye dans quelques instants.</p>
+      </div>`;
+  }
+}
+
+function buildCategories() {
+  const set = new Set();
+  state.produits.forEach(p => { if (p.categorie) set.add(p.categorie); });
+  state.categories = ['tout', ...Array.from(set).sort()];
+}
+
+function renderFiltres() {
+  $('filtersBar').innerHTML = state.categories.map(c => {
+    const label = c === 'tout' ? 'Tout 👀' : esc(c);
+    return `<button class="cat-chip ${c === state.filtreCategorie ? 'active' : ''}" data-cat="${esc(c)}">${label}</button>`;
+  }).join('');
+  $('filtersBar').querySelectorAll('.cat-chip').forEach(b => {
+    b.addEventListener('click', () => {
+      state.filtreCategorie = b.dataset.cat;
+      renderFiltres();
+      renderGrille();
+    });
+  });
+}
+
+function renderGrille() {
+  const list = state.filtreCategorie === 'tout'
+    ? state.produits
+    : state.produits.filter(p => p.categorie === state.filtreCategorie);
+
+  if (!list.length) {
+    $('gridProduits').innerHTML = `
+      <div class="empty-shop" style="grid-column:1/-1">
+        <div class="em">🧺</div>
+        <h3>Vestiaire vide pour le moment</h3>
+        <p>Aucun produit ${state.filtreCategorie === 'tout' ? 'en boutique' : `dans « ${esc(state.filtreCategorie)} »`} pour l'instant.<br>Reviens bientôt 👀</p>
+      </div>`;
+    return;
+  }
+
+  $('gridProduits').innerHTML = list.map(p => {
+    const photo = p.photos[0] || '';
+    let badge = '';
+    let progress = '';
+    let rupture = '';
+    if (p.mode === 'precommande') {
+      const pct = p.objectif > 0 ? Math.min(100, Math.round(p.compteur / p.objectif * 100)) : 0;
+      const ok = p.compteur >= p.objectif && p.objectif > 0;
+      badge = `<div class="badge-mode precommande">Précommande</div>`;
+      progress = `
+        <div class="progress-precommande ${ok ? 'ok' : ''}">
+          <div class="bar"><div style="width:${pct}%"></div></div>
+          <div class="txt"><span>${ok ? '🚀 Production lancée !' : `${p.compteur}/${p.objectif}`}</span><span>${pct}%</span></div>
+        </div>`;
+    } else {
+      badge = `<div class="badge-mode">Stock</div>`;
+      if (p.compteur <= 0) rupture = `<div class="badge-rupture">Rupture</div>`;
+    }
+    const photoHtml = photo
+      ? `<img src="${esc(photo)}" alt="${esc(p.nom)}" loading="lazy">`
+      : `<div class="ph-placeholder">⚽</div>`;
+    return `
+      <div class="card-produit" data-id="${esc(p.id)}" tabindex="0" role="button" aria-label="Voir ${esc(p.nom)}">
+        <div class="photo-wrap">
+          ${photoHtml}
+          ${badge}
+          ${rupture}
+        </div>
+        <div class="infos">
+          <div class="cat">${esc(p.categorie || '')}</div>
+          <h3>${esc(p.nom)}</h3>
+          ${progress}
+          <div class="prix">${eur(p.prix)}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  $('gridProduits').querySelectorAll('.card-produit').forEach(c => {
+    c.addEventListener('click', () => openProduit(c.dataset.id));
+    c.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openProduit(c.dataset.id); }
+    });
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  MODALE PRODUIT + CARROUSEL
+// ════════════════════════════════════════════════════════════════════════
+let _carouselIdx = 0;
+let _carouselProd = null;
+
+// Taille actuellement sélectionnée dans la modale produit ouverte
+// (réinitialisée à chaque openProduit). Si le produit n'a pas de tailles,
+// reste à '' et n'apparaît pas dans le panier.
+let _selectedSize = '';
+
+// Met à jour l'état du bouton "Ajouter au panier" selon :
+//   - rupture de stock
+//   - taille requise non sélectionnée
+function _updateAddBtnState() {
+  const p = _carouselProd;
+  if (!p) return;
+  const btn = $('mpAddBtn');
+  const isRupture = p.mode === 'stock' && p.compteur <= 0;
+  const taillesDispo = Array.isArray(p.tailles_dispo) ? p.tailles_dispo : [];
+  const needsSize = taillesDispo.length > 0 && !_selectedSize;
+  btn.disabled = isRupture || needsSize;
+  if (isRupture) btn.textContent = 'Rupture de stock';
+  else if (needsSize) btn.textContent = 'Choisis une taille';
+  else btn.textContent = 'Ajouter au panier';
+}
+
+function openProduit(id) {
+  const p = state.produits.find(x => x.id === id);
+  if (!p) return;
+  _carouselProd = p;
+  _carouselIdx = 0;
+  _selectedSize = '';  // reset à chaque ouverture
+  $('mpHead').textContent = p.nom;
+  renderCarousel();
+  renderThumbs();
+  renderInfo();  // ← appelle _updateAddBtnState à la fin
+  $('mpPrix').textContent = eur(p.prix);
+  showModal('modalProduit');
+}
+
+function renderCarousel() {
+  const carousel = $('mpCarousel');
+  carousel.querySelectorAll('.carousel-slide').forEach(s => s.remove());
+  const p = _carouselProd;
+  if (!p.photos.length) {
+    const ph = document.createElement('div');
+    ph.className = 'carousel-slide active placeholder';
+    ph.textContent = '⚽';
+    carousel.insertBefore(ph, $('mpArrowL'));
+  } else {
+    p.photos.forEach((url, i) => {
+      const s = document.createElement('div');
+      s.className = 'carousel-slide' + (i === _carouselIdx ? ' active' : '');
+      s.innerHTML = `<img src="${esc(url)}" alt="${esc(p.nom)} photo ${i+1}" loading="lazy">`;
+      carousel.insertBefore(s, $('mpArrowL'));
+    });
+  }
+  $('mpArrowL').disabled = _carouselIdx <= 0;
+  $('mpArrowR').disabled = _carouselIdx >= Math.max(0, p.photos.length - 1);
+  $('mpArrowL').style.display = p.photos.length > 1 ? '' : 'none';
+  $('mpArrowR').style.display = p.photos.length > 1 ? '' : 'none';
+}
+function renderThumbs() {
+  const p = _carouselProd;
+  if (p.photos.length <= 1) { $('mpThumbs').innerHTML = ''; return; }
+  $('mpThumbs').innerHTML = p.photos.map((u, i) => `
+    <button class="${i === _carouselIdx ? 'active' : ''}" data-idx="${i}" aria-label="Photo ${i+1}">
+      <img src="${esc(u)}" alt="">
+    </button>`).join('');
+  $('mpThumbs').querySelectorAll('button').forEach(b => {
+    b.addEventListener('click', () => {
+      _carouselIdx = parseInt(b.dataset.idx, 10);
+      renderCarousel(); renderThumbs();
+    });
+  });
+}
+$('mpArrowL').addEventListener('click', () => {
+  if (_carouselIdx > 0) { _carouselIdx--; renderCarousel(); renderThumbs(); }
+});
+$('mpArrowR').addEventListener('click', () => {
+  if (_carouselIdx < _carouselProd.photos.length - 1) { _carouselIdx++; renderCarousel(); renderThumbs(); }
+});
+// Swipe mobile
+(function setupSwipe() {
+  let startX = null;
+  $('mpCarousel').addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+  $('mpCarousel').addEventListener('touchend', (e) => {
+    if (startX == null) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > 40) {
+      if (dx < 0) $('mpArrowR').click();
+      else $('mpArrowL').click();
+    }
+    startX = null;
+  }, { passive: true });
+})();
+
+function renderInfo() {
+  const p = _carouselProd;
+  let mode = '';
+  if (p.mode === 'precommande') {
+    const pct = p.objectif > 0 ? Math.min(100, Math.round(p.compteur / p.objectif * 100)) : 0;
+    const ok = p.compteur >= p.objectif && p.objectif > 0;
+    const dateBut = p.date_butoir ? USB.formatDate(p.date_butoir, { long: true }) : '—';
+    mode = `
+      <div class="meta-grid">
+        <div class="line"><span class="l">Mode</span><span class="v">Précommande</span></div>
+        <div class="line"><span class="l">Objectif</span><span class="v">${p.compteur} / ${p.objectif} commandés (${pct}%)</span></div>
+        <div class="line"><span class="l">Date butoir</span><span class="v">${esc(dateBut)}</span></div>
+        ${ok ? '<div class="line"><span class="l">État</span><span class="v">🚀 Production lancée</span></div>' : ''}
+      </div>`;
+  } else {
+    const restant = Math.max(0, p.compteur);
+    mode = `
+      <div class="meta-grid">
+        <div class="line"><span class="l">Mode</span><span class="v">Stock disponible</span></div>
+        <div class="line"><span class="l">Restant</span><span class="v">${restant} ${restant > 1 ? 'pièces' : 'pièce'}</span></div>
+      </div>`;
+  }
+  // Sélecteur de tailles si le produit en propose
+  const tailles = Array.isArray(p.tailles_dispo) ? p.tailles_dispo : [];
+  let sizeBlock = '';
+  if (tailles.length > 0) {
+    sizeBlock = `
+      <div class="size-selector">
+        <div class="size-selector-label">
+          Choisis ta taille
+          <span class="req">Obligatoire</span>
+        </div>
+        <div class="size-pills" id="mpSizePills">
+          ${tailles.map(t => `<button type="button" class="size-pill ${_selectedSize === t ? 'active' : ''}" data-size="${esc(t)}">${esc(t)}</button>`).join('')}
+        </div>
+      </div>`;
+  }
+
+  $('mpInfo').innerHTML = `
+    <h3>${esc(p.nom)}</h3>
+    <div class="cat-line">${esc(p.categorie || '')}</div>
+    ${p.description ? `<div class="descr">${esc(p.description)}</div>` : ''}
+    ${mode}
+    ${sizeBlock}
+  `;
+
+  // Hook clic sur les pills de tailles
+  if (tailles.length > 0) {
+    document.querySelectorAll('#mpSizePills .size-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        _selectedSize = pill.dataset.size;
+        document.querySelectorAll('#mpSizePills .size-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        _updateAddBtnState();
+      });
+    });
+  }
+
+  // État du bouton "Ajouter au panier" selon dispo taille
+  _updateAddBtnState();
+}
+
+$('mpAddBtn').addEventListener('click', () => {
+  const p = _carouselProd;
+  if (!p) return;
+  // Sécurité supplémentaire : ne devrait pas arriver car le bouton est
+  // disabled tant que la taille n'est pas choisie, mais au cas où.
+  const taillesDispo = Array.isArray(p.tailles_dispo) ? p.tailles_dispo : [];
+  if (taillesDispo.length > 0 && !_selectedSize) {
+    toast('Choisis une taille avant d\'ajouter', true);
+    return;
+  }
+  addToCart(p.id, _selectedSize);
+  hideModal('modalProduit');
+  const sizeMsg = _selectedSize ? ` (taille ${_selectedSize})` : '';
+  toast(`Ajouté au panier 🛒${sizeMsg}`);
+});
+
+// ════════════════════════════════════════════════════════════════════════
+//  PANIER
+// ════════════════════════════════════════════════════════════════════════
+// Clé composite produit + taille pour différencier un Sweat M d'un Sweat L
+// dans le panier. Si pas de taille, la clé est juste produit_id.
+function _cartKey(produitId, taille) {
+  return String(produitId) + '|' + String(taille || '');
+}
+function addToCart(id, taille) {
+  taille = taille || '';
+  const key = _cartKey(id, taille);
+  const existing = state.cart.find(x => _cartKey(x.produit_id, x.taille) === key);
+  if (existing) existing.qty += 1;
+  else state.cart.push({ produit_id: id, qty: 1, taille: taille });
+  saveCart(); renderCart();
+}
+function changeQty(id, delta, taille) {
+  const key = _cartKey(id, taille || '');
+  const it = state.cart.find(x => _cartKey(x.produit_id, x.taille) === key);
+  if (!it) return;
+  it.qty += delta;
+  if (it.qty <= 0) state.cart = state.cart.filter(x => _cartKey(x.produit_id, x.taille) !== key);
+  saveCart(); renderCart();
+}
+function removeFromCart(id, taille) {
+  const key = _cartKey(id, taille || '');
+  state.cart = state.cart.filter(x => _cartKey(x.produit_id, x.taille) !== key);
+  saveCart(); renderCart();
+}
+function getCartTotal() {
+  let t = 0;
+  state.cart.forEach(it => {
+    const p = state.produits.find(x => x.id === it.produit_id);
+    if (p) t += (p.prix || 0) * it.qty;
+  });
+  return Math.round(t * 100) / 100;
+}
+function renderCart() {
+  // Nettoyage : retire les produits du panier qui ne sont plus en catalogue (inactifs)
+  state.cart = state.cart.filter(it => state.produits.find(x => x.id === it.produit_id));
+  const count = state.cart.reduce((s, it) => s + it.qty, 0);
+  $('cartCntSide').textContent   = count;
+  $('cartCntDrawer').textContent = count;
+  $('fabCnt').textContent        = count;
+  $('btnCheckoutSide').disabled  = count === 0;
+  $('btnCheckoutDrawer').disabled = count === 0;
+
+  const total = getCartTotal();
+  $('cartTotalSide').textContent   = eur(total);
+  $('cartTotalDrawer').textContent = eur(total);
+
+  if (!state.cart.length) {
+    const empty = `<div class="cart-empty"><div class="em">🧺</div><div class="t">Panier vide pour l'instant.</div></div>`;
+    $('cartBodySide').innerHTML   = empty;
+    $('cartBodyDrawer').innerHTML = empty;
+    return;
+  }
+  const lines = state.cart.map(it => {
+    const p = state.produits.find(x => x.id === it.produit_id);
+    if (!p) return '';
+    const photo = p.photos[0] || '';
+    const ttl = (p.prix || 0) * it.qty;
+    const sizeBadge = it.taille ? `<span class="size-badge">${esc(it.taille)}</span>` : '';
+    return `
+      <div class="cart-line">
+        <div class="thumb ${photo ? '' : 'ph'}">
+          ${photo ? `<img src="${esc(photo)}" alt="" loading="lazy">` : '⚽'}
+        </div>
+        <div class="det">
+          <div class="name">${esc(p.nom)}${sizeBadge}</div>
+          <div class="pu">${eur(p.prix)} · l'unité</div>
+        </div>
+        <div class="right">
+          <div class="stepper">
+            <button data-act="minus" data-id="${esc(p.id)}" data-taille="${esc(it.taille || '')}" aria-label="Retirer un">−</button>
+            <span class="qty">${it.qty}</span>
+            <button data-act="plus" data-id="${esc(p.id)}" data-taille="${esc(it.taille || '')}" aria-label="Ajouter un">+</button>
+          </div>
+          <div class="total">${eur(ttl)}</div>
+        </div>
+      </div>`;
+  }).join('');
+  $('cartBodySide').innerHTML   = lines;
+  $('cartBodyDrawer').innerHTML = lines;
+  // Hooks
+  document.querySelectorAll('.cart-line button[data-act]').forEach(b => {
+    b.addEventListener('click', () => {
+      const id = b.dataset.id;
+      const taille = b.dataset.taille || '';
+      changeQty(id, b.dataset.act === 'plus' ? 1 : -1, taille);
+    });
+  });
+}
+
+// Drawer mobile
+$('fabCart').addEventListener('click', () => {
+  $('drawerBg').classList.add('visible');
+  $('drawerCart').classList.add('visible');
+  document.body.classList.add('usb-no-scroll');
+});
+$('drawerBg').addEventListener('click', closeDrawer);
+function closeDrawer() {
+  $('drawerBg').classList.remove('visible');
+  $('drawerCart').classList.remove('visible');
+  if (!document.querySelector('.modal-bg.visible')) document.body.classList.remove('usb-no-scroll');
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  CHECKOUT
+// ════════════════════════════════════════════════════════════════════════
+$('btnCheckoutSide').addEventListener('click', startCheckout);
+$('btnCheckoutDrawer').addEventListener('click', startCheckout);
+
+function startCheckout() {
+  if (!state.cart.length) return;
+  if (!USB.isLoggedIn()) {
+    state.pendingCheckout = true;
+    openAuthModal();
+    return;
+  }
+  openCheckout();
+}
+
+async function openCheckout() {
+  showModal('modalCheckout');
+  closeDrawer();
+  $('btnSubmitOrder').disabled = true;
+  $('checkoutBody').innerHTML = `<div class="cart-empty"><div class="em">⏳</div><div class="t">Préparation…</div></div>`;
+
+  // Récupère le profil pour vérifier que la personne connectée est bien
+  // adulte (critère pour pouvoir commander). C'est la seule vérification
+  // côté front — le backend re-vérifie au submit.
+  const res = await USB.apiPost('shop_get_my_order_profile', {});
+  if (!res || !res.ok) {
+    let msg;
+    if (res?.reason === 'pas_de_famille') {
+      msg = "Ton profil n'est pas rattaché à une famille. Inscris-toi d'abord depuis l'app club.";
+    } else if (res?.reason === 'profil_inconnu') {
+      msg = "Ton profil est introuvable. Reconnecte-toi à l'app club.";
+    } else if (res?.reason === 'dob_manquante') {
+      msg = "Ta date de naissance n'est pas renseignée dans ton profil. Complète-le d'abord dans l'app club, puis reviens commander.";
+    } else if (res?.reason === 'mineur') {
+      msg = `Pour commander dans la boutique, il faut être majeur (tu as ${res.age} ans). Demande à un parent ou tuteur de passer la commande depuis son compte 🙏`;
+    } else {
+      msg = "Impossible de charger ton profil. Réessaye dans un instant.";
+    }
+    $('checkoutBody').innerHTML = `<div class="cart-empty"><div class="em">😬</div><div class="t">${esc(msg)}</div></div>`;
+    return;
+  }
+
+  state.profile = {
+    email:  res.email,
+    nom:    res.nom,
+    prenom: res.prenom,
+    age:    res.age,
+  };
+  state.payMode = 'club';
+  renderCheckoutBody();
+}
+
+function renderCheckoutBody() {
+  const total = getCartTotal();
+  // Items récap
+  const itemsHtml = state.cart.map(it => {
+    const p = state.produits.find(x => x.id === it.produit_id);
+    if (!p) return '';
+    const sizeBadge = it.taille ? `<span class="size-badge">${esc(it.taille)}</span>` : '';
+    return `<div class="l"><span class="item-l">${esc(p.nom)}${sizeBadge} × ${it.qty}</span><span>${eur((p.prix || 0) * it.qty)}</span></div>`;
+  }).join('');
+
+  // Récap "Tu commandes en tant que…" (pas de sélection — c'est forcément
+  // l'utilisateur connecté, déjà vérifié adulte côté backend)
+  const profileHtml = state.profile ? `
+    <div class="profile-block">
+      <div class="profile-label">Commande au nom de</div>
+      <div class="profile-name">${esc(state.profile.prenom)} ${esc(state.profile.nom)}</div>
+      <div class="profile-email">${esc(state.profile.email)}</div>
+    </div>
+  ` : '';
+
+  // Mode paiement
+  const helloAvail = !!state.helloasso_url;
+  const payHtml = `
+    <label style="font-size:13px;font-weight:600;color:var(--gris-fonce);margin-top:6px">Mode de paiement</label>
+    <div class="pay-mode">
+      <div class="pay-opt ${state.payMode === 'club' ? 'selected' : ''}" data-mode="club">
+        <div class="ico">🤝</div>
+        <div><div class="t">Au club</div><div class="s">Chèque ou espèces à la récupération de la commande.</div></div>
+      </div>
+      ${helloAvail ? `
+        <div class="pay-opt ${state.payMode === 'helloasso' ? 'selected' : ''}" data-mode="helloasso">
+          <div class="ico">💳</div>
+          <div><div class="t">HelloAsso · CB</div><div class="s">Tu recevras le lien après confirmation. Le club validera dès réception du virement.</div></div>
+        </div>` : ''}
+    </div>`;
+
+  $('checkoutBody').innerHTML = `
+    ${profileHtml}
+    ${payHtml}
+    <div class="recap">
+      ${itemsHtml}
+      <div class="l tot"><span>Total</span><span>${eur(total)}</span></div>
+    </div>
+  `;
+
+  // Listeners
+  document.querySelectorAll('.pay-opt').forEach(o => {
+    o.addEventListener('click', () => {
+      state.payMode = o.dataset.mode;
+      renderCheckoutBody();
+    });
+  });
+
+  $('btnSubmitOrder').disabled = !state.profile || !state.payMode;
+}
+
+$('btnSubmitOrder').addEventListener('click', async () => {
+  if (!state.profile || !state.payMode) return;
+  const btn = $('btnSubmitOrder');
+  btn.disabled = true; btn.textContent = 'Envoi…';
+  const items = state.cart.map(it => ({
+    produit_id: it.produit_id,
+    qty:        it.qty,
+    taille:     it.taille || ''
+  }));
+  const res = await USB.apiPost('shop_submit_order', {
+    items: items,
+    mode_paiement: state.payMode
+  });
+  btn.disabled = false; btn.textContent = 'Confirmer la commande';
+  if (!res || !res.ok) {
+    const reasons = {
+      panier_vide:            'Panier vide.',
+      stock_insuffisant:      "Un article du panier n'est plus en stock. On a rafraîchi le catalogue.",
+      precommande_close:      "Une précommande est close. On a rafraîchi le catalogue.",
+      mineur:                 "Tu dois être majeur pour passer commande. Demande à un adulte de ta famille.",
+      dob_manquante:          "Date de naissance manquante dans ton profil. Complète-le dans l'app club.",
+      profil_invalide:        "Ton profil est invalide. Reconnecte-toi.",
+      helloasso_indisponible: 'HelloAsso non configuré.',
+      taille_manquante:    "Tu dois choisir une taille pour ce produit avant de commander.",
+      taille_invalide:     "La taille sélectionnée n'est plus disponible pour ce produit."
+    };
+    toast(reasons[res?.reason] || "Échec de l'enregistrement. Réessaye dans un instant.", true);
+    // Si stock/précommande KO : on rafraîchit
+    if (res?.reason === 'stock_insuffisant' || res?.reason === 'precommande_close') {
+      await loadCatalogue();
+      renderCart();
+    }
+    return;
+  }
+
+  // Succès
+  hideModal('modalCheckout');
+  state.cart = [];
+  saveCart(); renderCart();
+
+  // Modale confirmation
+  let helloLink = '';
+  if (res.mode_paiement === 'helloasso' && res.helloasso_url) {
+    helloLink = `
+      <div style="background:var(--ambre-bg);border-radius:10px;padding:12px 14px;margin:14px 0;">
+        <strong>💳 Étape suivante :</strong> règle ta commande via HelloAsso.
+        <a href="${esc(res.helloasso_url)}" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;background:var(--vert-club);color:white;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:700">Ouvrir HelloAsso ↗</a>
+      </div>
+      <div style="font-size:12px;color:var(--gris-fonce)">Le trésorier validera ta commande dès réception du virement (sous 24-48h).</div>`;
+  } else {
+    helloLink = `
+      <div style="background:var(--vert-bg);border-radius:10px;padding:12px 14px;margin:14px 0;">
+        🤝 <strong>Paiement au club</strong> à régler lors de la récupération de la commande.
+      </div>`;
+  }
+  $('confirmedBody').innerHTML = `
+    <p style="margin:0 0 8px">Merci ! Ta commande <strong>${esc(res.commande_id)}</strong> est enregistrée.</p>
+    <p style="margin:0 0 0;font-size:22px;font-weight:800;color:var(--vert-club)">${eur(res.total)}</p>
+    ${helloLink}
+    <p style="font-size:12px;color:var(--gris)">Tu recevras une notif à chaque étape (paiement validé, production lancée, prête à récupérer).</p>
+  `;
+  showModal('modalConfirmed');
+});
+
+$('btnSeeOrders').addEventListener('click', () => {
+  hideModal('modalConfirmed');
+  showMyOrders();
+});
+
+// ════════════════════════════════════════════════════════════════════════
+//  MES COMMANDES
+// ════════════════════════════════════════════════════════════════════════
+// La gestion "Mes commandes" a été déplacée dans Mon espace (index.html
+// onglet Commandes) en mai 2026. La boutique ne fait plus que le catalogue.
+// `showCatalogue()` est conservée pour compatibilité (le bouton "Retour" du
+// drawer panier l'appelle), mais elle n'a plus rien à toggler.
+function showCatalogue() {
+  $('shopHeaderTitle').textContent = 'Boutique du club';
+  $('shopHeaderSub').textContent = 'Sweats, t-shirts, maillots officiels';
+  $('nav-boutique')?.classList.add('active');
+  location.hash = '';
+}
+
+// Stub de compat : si un vieux code (ou notif push obsolète) appelle
+// encore showMyOrders, on redirige vers Mon espace. Pas d'erreur, pas
+// de surprise pour l'user.
+function showMyOrders() {
+  window.location.href = './index.html#commandes';
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  CLOSE HANDLERS GLOBAUX
+// ════════════════════════════════════════════════════════════════════════
+document.querySelectorAll('[data-close]').forEach(b => {
+  b.addEventListener('click', () => hideModal(b.dataset.close));
+});
+document.querySelectorAll('.modal-bg').forEach(bg => {
+  bg.addEventListener('click', (e) => { if (e.target === bg) hideModal(bg.id); });
+});
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-bg.visible').forEach(m => hideModal(m.id));
+    if ($('drawerCart').classList.contains('visible')) closeDrawer();
+  }
+});
+
+// Note : le retour vers l'app club passe désormais par le clic sur le logo
+// de la nav (href="./") ou les cartes Actualité/Agenda/Contact. Pas besoin
+// d'un bouton "Retour" dédié.
+
+// ════════════════════════════════════════════════════════════════════════
+//  NAV MOBILE (burger menu) — extrait d'index.html
+// ════════════════════════════════════════════════════════════════════════
+function toggleNavMenu(){
+  const links   = $('navLinks');
+  const burger  = $('navBurger');
+  const overlay = $('navMobileOverlay');
+  if (!links || !burger || !overlay) return;
+  const isOpen = links.classList.contains('open');
+  if (isOpen) {
+    links.classList.remove('open');
+    burger.classList.remove('open');
+    overlay.classList.remove('show');
+  } else {
+    links.classList.add('open');
+    burger.classList.add('open');
+    overlay.classList.add('show');
+  }
+}
+function closeNavMenu(){
+  $('navLinks')?.classList.remove('open');
+  $('navBurger')?.classList.remove('open');
+  $('navMobileOverlay')?.classList.remove('show');
+}
+// Exposés en global pour les onclick HTML
+window.toggleNavMenu = toggleNavMenu;
+window.closeNavMenu  = closeNavMenu;
+
+// Effet d'ombre au scroll sur la nav (cohérent avec index.html)
+window.addEventListener('scroll', () => {
+  const nav = $('nav');
+  if (!nav) return;
+  if (window.scrollY > 8) nav.classList.add('scrolled');
+  else nav.classList.remove('scrolled');
+}, { passive: true });
+
+// Petit easter egg : dribble du ballon au clic sur le logo nav
+document.querySelector('.nav-logo-ball')?.addEventListener('click', (e) => {
+  const ball = e.currentTarget;
+  ball.classList.remove('spinning');
+  // Reflow pour forcer le redémarrage de l'animation CSS
+  void ball.offsetWidth;
+  ball.classList.add('spinning');
+});
+
+// ════════════════════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════════════════════
+// Les 3 premiers appels sont synchrones (localStorage + DOM) → instantanés.
+loadCart();
+renderCart();
+updateAuthUI();
+// loadCatalogue est async mais grâce à apiGetCached (stale-while-revalidate),
+// l'affichage est quasi-instantané dès la 2e visite.
+loadCatalogue();
+// (La gestion du hash #mes-commandes est faite plus haut, redirection vers
+// index.html#commandes — voir le mini-script en début de page.)
+
+// Enregistrement SW + préfetch des pages adjacentes
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').then(() => {
+    // ⚡ Précharge index.html en background dès que le navigateur est idle.
+    //  Permet une navigation instantanée vers l'app principale au tap sur
+    //  "Mon espace" ou "Agenda".
+    const prefetch = () => {
+      if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+          type: 'PREFETCH',
+          urls: ['./index.html']
+        });
+      }
+    };
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(prefetch, { timeout: 3000 });
+    } else {
+      setTimeout(prefetch, 1500);
+    }
+  }).catch(() => {});
+}
+</script>
+</body>
+</html>
